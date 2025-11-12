@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login User - SMKN 4 BOGOR</title>
+    <title>Reset Password - SMKN 4 BOGOR</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
             align-items: center;
         }
         
-        .login-container {
+        .reset-container {
             background: white;
             border-radius: 1rem;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -32,7 +32,7 @@
             border: 1px solid rgba(0,0,0,0.05);
         }
         
-        .login-header {
+        .reset-header {
             background: white;
             color: var(--primary-color);
             padding: 2.5rem 2rem;
@@ -40,14 +40,14 @@
             border-bottom: 1px solid #e5e7eb;
         }
         
-        .login-header img {
+        .reset-header img {
             height: 80px;
             width: auto;
             margin-bottom: 1.5rem;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
         }
         
-        .login-body {
+        .reset-body {
             padding: 2.5rem 2rem;
             background: #fafbfc;
         }
@@ -120,26 +120,21 @@
             color: var(--primary-color);
         }
         
-        .back-link, .forgot-link, .register-link {
-            color: #6b7280;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .back-link:hover, .forgot-link:hover, .register-link:hover {
-            color: var(--primary-color);
-        }
-        
         .form-label {
             font-weight: 600;
             color: #374151;
             margin-bottom: 0.5rem;
         }
         
-        .login-title {
+        .reset-title {
             color: #1f2937;
             font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .reset-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
             margin-bottom: 2rem;
         }
         
@@ -154,20 +149,24 @@
             opacity: 0.8;
             font-weight: 500;
         }
+        
+        .form-text {
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
-                <div class="login-container">
-                    <div class="login-header">
+                <div class="reset-container">
+                    <div class="reset-header">
                         <img src="/images/logo-smkn4.png.png" alt="SMKN 4 BOGOR">
                         <h4 class="school-name mb-2">SMK Negeri 4 Kota Bogor</h4>
                         <p class="user-panel-text mb-0">Web Galeri Sekolah</p>
                     </div>
                     
-                    <div class="login-body">
+                    <div class="reset-body">
                         @if(session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
@@ -182,34 +181,20 @@
                             </div>
                         @endif
                         
-                        <h5 class="login-title text-center mb-4">Login User</h5>
+                        <h5 class="reset-title text-center">Reset Password</h5>
+                        <p class="reset-desc text-center">Masukkan password baru untuk akun Anda.</p>
                         
-                        <form method="POST" action="{{ route('user.login') }}">
+                        <form method="POST" action="{{ route('user.reset-password') }}">
                             @csrf
                             
                             <div class="mb-3">
-                                <label for="identity" class="form-label">Email atau Username</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-user"></i>
-                                    </span>
-                                    <input type="text" class="form-control @error('identity') is-invalid @enderror" 
-                                           id="identity" name="identity" value="{{ old('identity') }}" 
-                                           placeholder="Masukkan email atau username" required autofocus>
-                                </div>
-                                @error('identity')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label">Password Baru</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-lock"></i>
                                     </span>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                           id="password" name="password" placeholder="Masukkan password" required>
+                                           id="password" name="password" placeholder="Masukkan password baru" required autofocus>
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -217,44 +202,30 @@
                                 @error('password')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
+                                <div class="form-text">Password minimal 6 karakter</div>
                             </div>
                             
-                            <!-- reCAPTCHA -->
-                            <div class="mb-3">
-                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                                @error('g-recaptcha-response')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                            <div class="mb-4">
+                                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" 
+                                           id="password_confirmation" name="password_confirmation" 
+                                           placeholder="Ulangi password baru" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                    <i class="fas fa-key me-2"></i>Reset Password
                                 </button>
                             </div>
                         </form>
-                        
-                        <div class="text-center mb-3">
-                            <a href="{{ route('user.forgot-password') }}" class="forgot-link">
-                                <i class="fas fa-key me-1"></i>Lupa Password?
-                            </a>
-                        </div>
-                        
-                        <hr class="my-3">
-                        
-                        <div class="text-center mb-3">
-                            <span class="text-muted">Belum punya akun?</span>
-                            <a href="{{ route('user.register') }}" class="register-link ms-1">
-                                <i class="fas fa-user-plus me-1"></i>Daftar Sekarang
-                            </a>
-                        </div>
-                        
-                        <div class="text-center">
-                            <a href="{{ route('guest.home') }}" class="back-link">
-                                <i class="fas fa-arrow-left me-1"></i>Kembali ke Beranda
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -268,6 +239,22 @@
         // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (password.type === 'password') {
+                password.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                password.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Toggle password confirmation visibility
+        document.getElementById('togglePasswordConfirm').addEventListener('click', function() {
+            const password = document.getElementById('password_confirmation');
             const icon = this.querySelector('i');
             
             if (password.type === 'password') {

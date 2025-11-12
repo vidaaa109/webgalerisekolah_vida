@@ -19,8 +19,14 @@ class TestimonialController extends Controller
             // Pastikan user login (route sudah dilindungi middleware auth:user)
             $user = Auth::guard('user')->user();
 
+            // Validasi input termasuk reCAPTCHA
             $validator = Validator::make($request->all(), [
                 'pesan' => 'required|string|max:1000',
+                'g-recaptcha-response' => 'required',
+            ], [
+                'pesan.required' => 'Pesan wajib diisi.',
+                'pesan.max' => 'Pesan maksimal 1000 karakter.',
+                'g-recaptcha-response.required' => 'Verifikasi CAPTCHA wajib diisi.',
             ]);
 
             if ($validator->fails()) {
@@ -31,6 +37,30 @@ class TestimonialController extends Controller
                 ], 422);
             }
 
+            // Verify reCAPTCHA
+            try {
+                $verify = Http::asForm()->post(config('services.recaptcha.verify_url'), [
+                    'secret' => config('services.recaptcha.secret_key'),
+                    'response' => $request->input('g-recaptcha-response'),
+                    'remoteip' => $request->ip(),
+                ])->json();
+
+                if (!($verify['success'] ?? false)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Verifikasi CAPTCHA gagal.',
+                        'errors' => ['g-recaptcha-response' => ['Verifikasi CAPTCHA gagal.']]
+                    ], 422);
+                }
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat memverifikasi CAPTCHA.',
+                    'errors' => ['g-recaptcha-response' => ['Tidak dapat memverifikasi CAPTCHA.']]
+                ], 422);
+            }
+
+            // Create testimonial
             $testimonial = Testimonial::create([
                 'nama' => $user->name ?? $user->username ?? 'User',
                 'email' => $user->email ?? '-',
@@ -40,14 +70,14 @@ class TestimonialController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Testimonial berhasil dikirim! Menunggu persetujuan admin.',
+                'message' => 'Testimoni berhasil dikirim! Menunggu persetujuan admin.',
                 'data' => $testimonial
             ], 201);
         } catch (\Exception $e) {
             \Log::error('Testimonial store error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan testimonial',
+                'message' => 'Terjadi kesalahan saat menyimpan testimoni.',
                 'error' => $e->getMessage()
             ], 500);
         }

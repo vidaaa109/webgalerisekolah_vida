@@ -68,32 +68,39 @@ class GuestController extends Controller
         $query = Galery::with(['post.kategori', 'fotos'])
             ->where('status', 1);
             
-        // Filter by kategori if provided
-        if ($request->has('kategori') && $request->kategori) {
-            $query->whereHas('post.kategori', function($q) use ($request) {
-                $q->where('slug', $request->kategori)
-                  ->orWhere('id', $request->kategori)
-                  ->orWhere('judul', $request->kategori);
-            });
+        // Filter by post_id if provided (filtering by specific gallery post title)
+        if ($request->has('post') && $request->post) {
+            $query->where('post_id', $request->post);
         }
         
         $galeries = $query->orderBy('position')->get();
-        $categories = Kategori::all();
         
-        // Get posts dengan kategori "Galeri Sekolah"
+        // Get posts dengan kategori "Galeri Sekolah" for filter chips
         $galeriKategori = Kategori::where('judul', 'Galeri Sekolah')->first();
         $galeriPosts = collect();
+        $filterPosts = collect();
         
         if ($galeriKategori) {
+            // Posts for content section
             $galeriPosts = Post::with(['kategori', 'petugas'])
                 ->where('status', 'published')
                 ->where('kategori_id', $galeriKategori->id)
                 ->latest()
                 ->take(6)
                 ->get();
+                
+            // Posts that have galleries (for filter chips)
+            $filterPosts = Post::with(['kategori'])
+                ->where('status', 'published')
+                ->where('kategori_id', $galeriKategori->id)
+                ->whereHas('galeries', function($q) {
+                    $q->where('status', 1);
+                })
+                ->latest()
+                ->get();
         }
             
-        return view('guest.galeri', compact('galeries', 'categories', 'galeriPosts'));
+        return view('guest.galeri', compact('galeries', 'galeriPosts', 'filterPosts'));
     }
 
     /**

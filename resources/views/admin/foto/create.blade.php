@@ -13,36 +13,21 @@
                 <div class="card-body">
                     <form id="fotoUploadForm" action="{{ route('admin.foto.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="galery_id" class="form-label">Galeri</label>
-                                    <select class="form-select @error('galery_id') is-invalid @enderror" 
-                                            id="galery_id" name="galery_id" required>
-                                        <option value="">Pilih Galeri</option>
-                                        @foreach($galeries as $galery)
-                                            <option value="{{ $galery->id }}" 
-                                                    {{ old('galery_id') == $galery->id ? 'selected' : '' }}>
-                                                {{ $galery->post->judul }} (Position: {{ $galery->position }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('galery_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="judul" class="form-label">Judul Foto</label>
-                                    <input type="text" class="form-control @error('judul') is-invalid @enderror" 
-                                           id="judul" name="judul" value="{{ old('judul') }}" 
-                                           placeholder="Masukkan judul foto" required>
-                                    @error('judul')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="galery_id" class="form-label">Galeri</label>
+                            <select class="form-select @error('galery_id') is-invalid @enderror" 
+                                    id="galery_id" name="galery_id" required>
+                                <option value="">Pilih Galeri</option>
+                                @foreach($galeries as $galery)
+                                    <option value="{{ $galery->id }}" 
+                                            {{ old('galery_id') == $galery->id ? 'selected' : '' }}>
+                                        {{ $galery->post->judul }} (Position: {{ $galery->position }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('galery_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
@@ -142,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const fd = new FormData();
             fd.append('_token', csrf);
             fd.append('galery_id', document.getElementById('galery_id').value);
-            fd.append('judul', document.getElementById('judul').value);
             // kirim sebagai 'file' untuk single endpoint agar kompatibel
             fd.append('file', file);
 

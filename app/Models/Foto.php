@@ -10,7 +10,7 @@ class Foto extends Model
     use HasFactory;
 
     protected $table = 'foto';
-    protected $fillable = ['galery_id', 'file', 'judul'];
+    protected $fillable = ['galery_id', 'file'];
 
     public function galery()
     {

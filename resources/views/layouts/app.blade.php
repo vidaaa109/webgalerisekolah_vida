@@ -81,108 +81,125 @@
             color: var(--secondary-color);
         }
         
-        /* Main Navigation Bar - Modern Professional Style */
+        /* Main Navigation Bar - Minimal Clean Professional Style */
         .main-navbar {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 0.5rem 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 999;
             transition: all 0.3s ease;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            border-bottom: 1px solid #e5e7eb;
         }
         
         .main-navbar .container-fluid {
-            max-width: 1400px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0.5rem 2rem;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 0 2rem;
         }
         
         .main-navbar.with-topbar {
-            margin-top: 30px;
+            margin-top: 0;
         }
         
         .navbar-brand {
-            background: transparent;
             color: var(--text-primary) !important;
-            padding: 12px 20px;
+            padding: 0.75rem 0;
             margin: 0;
-            border-radius: 12px;
             display: flex;
             align-items: center;
             gap: 12px;
-            position: relative;
-            z-index: 10;
-            font-weight: 700;
-            font-size: 18px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .navbar-brand:hover {
-            background: rgba(30, 58, 138, 0.05);
-            transform: translateY(-1px);
+            font-weight: 600;
+            font-size: 16px;
         }
         
         .navbar-brand img {
-            height: 40px;
+            height: 36px;
             width: auto;
         }
         
         .navbar-brand .school-name {
-            transform: none;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
         }
         
         .navbar-brand .school-name h4 {
             margin: 0;
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 500;
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 400;
             letter-spacing: 0.5px;
         }
         
         .navbar-brand .school-name h3 {
             margin: 0;
-            font-size: 18px;
+            font-size: 16px;
             color: var(--primary-color);
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0;
         }
         
         .nav-link {
-            color: var(--text-primary) !important;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 12px 20px !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #4b5563 !important;
+            font-weight: 500;
+            font-size: 13px;
+            padding: 0.75rem 1rem !important;
+            transition: all 0.2s ease;
             position: relative;
-            border-radius: 10px !important;
+            border-radius: 0 !important;
             border: none !important;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
+            letter-spacing: 0;
+            text-transform: none;
             background: transparent;
-            margin: 0 4px;
+            margin: 0;
+        }
+        
+        .nav-link i {
+            font-size: 13px;
+            opacity: 0.8;
         }
         
         .nav-link:hover {
             color: var(--primary-color) !important;
-            background: rgba(30, 58, 138, 0.08);
-            transform: translateY(-2px);
+            background: transparent;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
         }
         
         .nav-link.active {
-            color: white !important;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            color: var(--primary-color) !important;
+            background: transparent;
+            font-weight: 600;
         }
         
         .nav-link.active::after {
-            display: none;
+            width: 80%;
+        }
+        
+        /* Dropdown toggle indicator line - make it consistent */
+        .nav-link.dropdown-toggle::before {
+            content: none;
+        }
+        
+        /* Override Bootstrap's default dropdown-toggle arrow */
+        .dropdown-toggle::after {
+            display: none !important;
         }
         
         
@@ -242,110 +259,177 @@
             line-height: 1.6;
         }
         
-        /* Alert Messages Rounded */
+        /* Alert Messages - Minimal Style */
         .alert {
-            border-radius: 12px !important;
-            border: none;
-            padding: 16px 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 6px !important;
+            border: 1px solid;
+            padding: 0.875rem 1rem;
+            box-shadow: none;
+            font-size: 13px;
         }
         
         .alert-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+            background: #f0fdf4;
+            color: #15803d;
+            border-color: #bbf7d0;
         }
         
         .alert-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
         }
         
         .alert-info {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
+            background: var(--primary-color);
             border: none;
-            border-radius: 12px !important;
-            font-weight: 600;
-            padding: 12px 28px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            border-radius: 6px !important;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            box-shadow: none;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+            background: #1e40af;
+            transform: none;
+            box-shadow: none;
         }
         
         .btn-outline-primary {
-            border: 2px solid var(--primary-color);
+            border: 1px solid var(--primary-color);
             color: var(--primary-color);
             background: transparent;
-            border-radius: 12px !important;
-            font-weight: 600;
-            padding: 10px 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 6px !important;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            font-size: 13px;
+            transition: all 0.2s ease;
         }
         
         .btn-outline-primary:hover {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
-            color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
         
-        /* Form Controls - Modern Style */
+        /* Form Controls - Minimal Style */
         .form-control {
-            border: 2px solid var(--border-color);
-            border-radius: 12px !important;
-            padding: 14px 18px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: var(--card-bg);
+            border: 1px solid #e5e7eb;
+            border-radius: 6px !important;
+            padding: 0.625rem 0.875rem;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            background: #ffffff;
         }
         
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
-            background: var(--card-bg);
-            transform: translateY(-1px);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.08);
+            background: #ffffff;
+            outline: none;
         }
         
-        /* Dropdown Menu Rounded */
+        /* Dropdown Menu - Minimal Style */
         .dropdown-menu {
-            border-radius: 16px !important;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-            padding: 8px;
-            margin-top: 8px !important;
+            border-radius: 8px !important;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 0.5rem;
+            margin-top: 0 !important;
+            min-width: 200px;
         }
         
         .dropdown-item {
-            border-radius: 10px !important;
-            padding: 10px 16px;
-            margin: 2px 0;
+            border-radius: 6px !important;
+            padding: 0.625rem 1rem;
+            margin: 0.125rem 0;
             transition: all 0.2s ease;
+            font-size: 13px;
+            color: #4b5563;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .dropdown-item i {
+            width: 20px;
+            opacity: 0.7;
         }
         
         .dropdown-item:hover {
-            background: rgba(30, 58, 138, 0.08);
+            background: #f3f4f6;
             color: var(--primary-color);
-            transform: translateX(4px);
+        }
+        
+        /* Ensure dropdown items are clickable */
+        .dropdown-item:active {
+            background: #e5e7eb;
+        }
+        
+        .dropdown-item.active {
+            background: #eff6ff;
+            color: var(--primary-color);
+            font-weight: 600;
         }
         
         .dropdown-divider {
-            margin: 8px 0;
+            margin: 0.5rem 0;
             opacity: 0.1;
         }
         
+        /* Dropdown hover effect - keep dropdown visible when hovering menu items */
+        .dropdown:hover .dropdown-menu,
+        .dropdown-menu:hover {
+            display: block;
+        }
+        
+        /* Show indicator line when dropdown is hovered - including when hovering dropdown items */
+        .dropdown:hover .dropdown-toggle::after,
+        .dropdown-menu:hover ~ .dropdown-toggle::after {
+            width: 80%;
+        }
+        
+        .dropdown-menu {
+            display: none;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        /* Extend dropdown clickable area to prevent gap */
+        .dropdown {
+            position: relative;
+        }
+        
+        /* Create seamless connection between toggle and dropdown */
+        .dropdown-toggle {
+            padding-bottom: 0.75rem !important;
+        }
+        
+        /* Invisible bridge to prevent hover gap */
+        .dropdown::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 1000;
+        }
+        
         .form-label {
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 13px;
         }
         
         /* Rounded Elements - Professional Style */
@@ -354,24 +438,25 @@
         }
         
         .card {
-            border-radius: 16px !important;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
+            border-radius: 8px !important;
+            border: 1px solid #e5e7eb;
+            box-shadow: none;
+            transition: all 0.2s ease;
         }
         
         .card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: #d1d5db;
         }
         
         .card-header {
-            border-radius: 16px 16px 0 0 !important;
-            border-bottom: none;
+            border-radius: 8px 8px 0 0 !important;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
         }
         
         .card-body {
-            border-radius: 0 0 16px 16px !important;
+            border-radius: 0 0 8px 8px !important;
         }
         
         /* Minimalist Gen Z Design Enhancements */
@@ -385,20 +470,21 @@
         }
         
         .navbar-toggler {
-            border-radius: 10px !important;
-            border: 2px solid var(--border-color);
+            border-radius: 6px !important;
+            border: 1px solid #e5e7eb;
             box-shadow: none;
-            padding: 8px 12px;
-            transition: all 0.3s ease;
+            padding: 0.5rem;
+            transition: all 0.2s ease;
         }
         
         .navbar-toggler:hover {
-            background: rgba(30, 58, 138, 0.05);
-            border-color: var(--primary-color);
+            background: #f9fafb;
+            border-color: #d1d5db;
         }
         
         .navbar-toggler:focus {
-            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+            box-shadow: none;
+            outline: none;
         }
         
         /* Gen Z Minimalist color scheme */
@@ -407,7 +493,7 @@
         }
         
         .main-navbar {
-            background-color: #f8fafc !important;
+            background-color: #ffffff !important;
         }
         
         /* Page Transition Animations */
@@ -467,32 +553,6 @@
             visibility: visible !important;
         }
         
-        /* Card hover animations - Netflix Style */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px !important;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-        
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-color);
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
-            color: var(--secondary-color);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            font-weight: 600;
-        }
-        
-        .card-body {
-            padding: 24px;
-        }
         
         /* Force visibility for all content */
         * {
@@ -507,35 +567,11 @@
             display: block !important;
         }
         
-        /* Button animations */
+        /* Button animations - Minimal */
         .btn {
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* Navbar link animations - Netflix Style */
-        .nav-link {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .nav-link:hover::before {
-            left: 100%;
-        }
         
         /* Modern animations */
         @keyframes fadeInUp {
@@ -632,28 +668,39 @@
             }
             
             .navbar-brand {
-                transform: none;
-                border-radius: 12px !important;
-                margin: 0 auto;
+                padding: 0.75rem 0;
             }
             
-            .navbar-brand .school-name {
-                transform: none;
+            .navbar-brand img {
+                height: 32px;
+            }
+            
+            .navbar-brand .school-name h3 {
+                font-size: 14px;
+            }
+            
+            .navbar-brand .school-name h4 {
+                font-size: 10px;
             }
             
             .nav-link {
-                border-radius: 10px !important;
-                text-align: center;
-                margin: 4px 0;
+                text-align: left;
+                padding: 0.625rem 0 !important;
+                border-bottom: 1px solid #f3f4f6;
+            }
+            
+            .nav-link::after {
+                display: none;
             }
             
             .main-navbar .container-fluid {
-                border-radius: 12px;
-                padding: 1rem;
+                padding: 0 1rem;
             }
             
             .navbar-collapse {
-                margin-top: 1rem;
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+                border-top: 1px solid #e5e7eb;
             }
         }
     </style>
@@ -665,11 +712,11 @@
     <nav class="navbar navbar-expand-lg main-navbar">
     <div class="container-fluid">
 
-        {{-- Logo + Nama Sekolah --}}
-        <a class="navbar-brand d-flex align-items-center" href="{{ route('guest.home') }}">
+        {{-- Logo + Nama Sekolah (Non-clickable) --}}
+        <div class="navbar-brand d-flex align-items-center" style="cursor: default;">
             <img src="/images/logo-smkn4.png.png" alt="SMKN 4 BOGOR" style="height:50px; margin-right:10px;">
             <span class="fw-bold">SMKN 4 BOGOR</span>
-        </a>
+        </div>
 
         {{-- Toggle untuk mode mobile --}}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -681,22 +728,42 @@
             <ul class="navbar-nav ms-auto align-items-center">
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('guest.profil') ? 'active' : '' }}" href="{{ route('guest.profil') }}">PROFIL</a>
+                    <a class="nav-link {{ request()->routeIs('guest.home') ? 'active' : '' }}" href="{{ route('guest.home') }}">
+                        BERANDA
+                    </a>
                 </li>
 
                 <li class="nav-item ms-3">
-                    <a class="nav-link {{ request()->routeIs('guest.agenda*') ? 'active' : '' }}" href="{{ route('guest.agenda') }}">AGENDA</a>
+                    <a class="nav-link {{ request()->routeIs('guest.galeri*') ? 'active' : '' }}" href="{{ route('guest.galeri') }}">
+                        GALERI
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown ms-3">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('guest.agenda*') || request()->routeIs('guest.informasi*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        KATEGORI <i class="bi bi-chevron-down ms-1" style="font-size: 12px;"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item {{ request()->routeIs('guest.informasi*') ? 'active' : '' }}" href="{{ route('guest.informasi') }}">
+                            Informasi Terkini
+                        </a></li>
+                        <li><a class="dropdown-item {{ request()->routeIs('guest.agenda*') ? 'active' : '' }}" href="{{ route('guest.agenda') }}">
+                            Agenda Sekolah
+                        </a></li>
+                    </ul>
                 </li>
 
                 <li class="nav-item ms-3">
-                    <a class="nav-link {{ request()->routeIs('guest.informasi*') ? 'active' : '' }}" href="{{ route('guest.informasi') }}">INFORMASI</a>
+                    <a class="nav-link {{ request()->routeIs('guest.profil') ? 'active' : '' }}" href="{{ route('guest.profil') }}">
+                        PROFIL SEKOLAH
+                    </a>
                 </li>
 
                 <li class="nav-item ms-3">
-                    <a class="nav-link {{ request()->routeIs('guest.galeri*') ? 'active' : '' }}" href="{{ route('guest.galeri') }}">GALERI</a>
+                    <a class="nav-link {{ request()->routeIs('guest.kontak') ? 'active' : '' }}" href="{{ route('guest.kontak') }}">
+                        KONTAK
+                    </a>
                 </li>
-
-                <!-- KONTAK menu dihapus; kontak dipindah ke footer -->
 
                 {{-- Auth area kanan: Guest => tombol Masuk/Daftar; User login => dropdown akun --}}
                 @php($userAuth = auth('user'))
@@ -724,10 +791,7 @@
                     </li>
                 @else
                     <li class="nav-item ms-3">
-                        <a class="btn btn-outline-primary" href="{{ route('user.login') }}">Masuk</a>
-                    </li>
-                    <li class="nav-item ms-2">
-                        <a class="btn btn-primary" href="{{ route('user.register') }}">Daftar</a>
+                        <a class="btn btn-primary" href="{{ route('user.login') }}">Masuk</a>
                     </li>
                 @endif
             </ul>
@@ -795,30 +859,40 @@
             
             // Update active nav link based on scroll position (only on home page)
             const sections = document.querySelectorAll('section[id]');
-            const navItems = document.querySelectorAll('.nav-link');
+            const navItems = document.querySelectorAll('.nav-link:not(.dropdown-toggle)');
+            const berandaLink = document.querySelector('.nav-link[href*="home"]');
             
             function updateActiveNav() {
-                let current = '';
+                // Check if we're on home page
+                const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
                 
+                if (!isHomePage) return;
+                
+                let current = 'beranda'; // Default to beranda
+                const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Check which section is currently in view
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
                     const sectionHeight = section.clientHeight;
                     
-                    if (window.pageYOffset >= (sectionTop - 200)) {
+                    if (scrollPos >= (sectionTop - 300)) {
                         current = section.getAttribute('id');
                     }
                 });
                 
+                // Always keep BERANDA active on home page, unless we're deep in another section
+                const shouldKeepBeranda = scrollPos < 400 || current === 'beranda';
+                
                 // Update active state for navbar items
                 navItems.forEach(item => {
+                    const itemText = item.textContent.trim();
+                    
+                    // Remove active from all first
                     item.classList.remove('active');
                     
-                    // Check if this nav item corresponds to current section
-                    if (current === 'profil' && item.textContent.trim() === 'PROFIL') {
-                        item.classList.add('active');
-                    } else if (current === 'galeri' && item.textContent.trim() === 'GALERI') {
-                        item.classList.add('active');
-                    } else if (current === 'beranda' && item.textContent.trim() === 'BERANDA') {
+                    // Add active to BERANDA when at top or in beranda section
+                    if (itemText === 'BERANDA' && shouldKeepBeranda) {
                         item.classList.add('active');
                     }
                 });
@@ -826,9 +900,85 @@
             
             // Only run scroll detection on home page
             if (window.location.pathname === '/' || window.location.pathname === '') {
-                window.addEventListener('scroll', updateActiveNav);
+                window.addEventListener('scroll', updateActiveNav, { passive: true });
                 updateActiveNav(); // Call once on load
+                
+                // Ensure BERANDA is active on page load
+                if (berandaLink) {
+                    berandaLink.classList.add('active');
+                }
             }
+            
+            // Dropdown hover functionality
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                if (toggle && menu) {
+                    let hideTimeout;
+                    
+                    // Show on hover (desktop)
+                    if (window.innerWidth > 991) {
+                        // Show dropdown when hovering dropdown container
+                        dropdown.addEventListener('mouseenter', function() {
+                            clearTimeout(hideTimeout);
+                            menu.classList.add('show');
+                            toggle.setAttribute('aria-expanded', 'true');
+                        });
+                        
+                        // Keep dropdown visible when hovering the menu itself
+                        menu.addEventListener('mouseenter', function() {
+                            clearTimeout(hideTimeout);
+                            menu.classList.add('show');
+                            toggle.setAttribute('aria-expanded', 'true');
+                        });
+                        
+                        // Hide on mouse leave from dropdown container
+                        dropdown.addEventListener('mouseleave', function(e) {
+                            // Only hide if not moving to menu
+                            if (!menu.contains(e.relatedTarget)) {
+                                hideTimeout = setTimeout(() => {
+                                    menu.classList.remove('show');
+                                    toggle.setAttribute('aria-expanded', 'false');
+                                }, 100);
+                            }
+                        });
+                        
+                        // Hide on mouse leave from menu
+                        menu.addEventListener('mouseleave', function() {
+                            hideTimeout = setTimeout(() => {
+                                menu.classList.remove('show');
+                                toggle.setAttribute('aria-expanded', 'false');
+                            }, 100);
+                        });
+                    }
+                    
+                    // Click functionality for mobile
+                    toggle.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 991) {
+                            e.preventDefault();
+                            menu.classList.toggle('show');
+                            const isExpanded = menu.classList.contains('show');
+                            toggle.setAttribute('aria-expanded', isExpanded);
+                        } else {
+                            // On desktop, prevent toggle click but allow dropdown items to be clicked
+                            e.preventDefault();
+                        }
+                    });
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                        const toggle = menu.closest('.dropdown')?.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+                    });
+                }
+            });
             
             // Pastikan konten utama terlihat (tanpa mengganggu komponen Bootstrap)
             const mainContent = document.querySelector('main');
@@ -858,7 +1008,7 @@
                 </div>
             </div>
 
-            <!-- Peta Lokasi & Kirim Pesan di Footer -->
+            <!-- Peta Lokasi & Informasi Kontak di Footer -->
             <div class="row g-3 align-items-stretch">
                 <div class="col-lg-6">
                     <div class="card border-0 shadow-lg h-100" style="border-radius: 20px; overflow: hidden;">
@@ -882,30 +1032,60 @@
 
                 <div class="col-lg-6">
                     <div class="card border-0 shadow-lg h-100" style="border-radius: 20px; overflow: hidden;">
-                        <div class="card-header text-white text-center" style="background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%); border-radius: 20px 20px 0 0;">
-                            <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Kirim Pesan</h5>
+                        <div class="card-header text-white" style="background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%); border-radius: 20px 20px 0 0;">
+                            <h5 class="mb-0"><i class="fas fa-phone me-2"></i>Informasi Kontak</h5>
                         </div>
                         <div class="card-body p-4" style="border-radius: 0 0 20px 20px;">
-                            @php($userAuth = auth('user'))
-                            <form id="footerMessageForm">
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="footer_pesan" class="form-label">Pesan</label>
-                                    <textarea class="form-control" id="footer_pesan" name="pesan" rows="4" placeholder="Tuliskan pesan Anda" @if(!$userAuth->check()) disabled @else required @endif></textarea>
+                            <div class="contact-info-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                            <i class="fas fa-envelope text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-white">Email</h6>
+                                        <p class="mb-0" style="color: #cbd5e1;">info@smkn4bogor.sch.id</p>
+                                    </div>
                                 </div>
-                                <div class="text-center">
-                                    @if(!$userAuth->check())
-                                        <a href="{{ route('user.login') }}" class="btn btn-primary px-4" id="footerSubmitBtn">
-                                            <i class="fas fa-right-to-bracket me-2"></i>Masuk
-                                        </a>
-                                    @else
-                                        <button type="submit" class="btn btn-primary px-4" id="footerSubmitBtn">
-                                            <i class="fas fa-paper-plane me-2"></i>Kirim
-                                        </button>
-                                    @endif
+                            </div>
+                            
+                            <div class="contact-info-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                            <i class="fas fa-phone text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-white">Telepon</h6>
+                                        <p class="mb-0" style="color: #cbd5e1;">(0251) 123456</p>
+                                    </div>
                                 </div>
-                            </form>
-                            <div id="footerAlertContainer" class="mt-3"></div>
+                            </div>
+                            
+                            <div class="contact-info-item mb-4">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                            <i class="fas fa-fax text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-white">Fax</h6>
+                                        <p class="mb-0" style="color: #cbd5e1;">(0251) 123457</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr style="border-color: rgba(255,255,255,0.1);">
+                            
+                            <div class="text-center mt-3">
+                                <p class="text-white-50 mb-3 small">Ingin mengirim testimoni atau pesan?</p>
+                                <a href="{{ route('guest.kontak') }}" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-paper-plane me-2"></i>Hubungi Kami
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

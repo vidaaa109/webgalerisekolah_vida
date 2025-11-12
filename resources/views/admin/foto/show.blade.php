@@ -21,11 +21,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h3>{{ $foto->judul }}</h3>
+                            <h3>{{ $foto->galery->post->judul }}</h3>
                             <p class="text-muted">Dibuat pada {{ $foto->created_at->format('d M Y H:i') }}</p>
                             
                             <div class="text-center mb-4">
-                                <img src="{{ Storage::url($foto->file) }}" alt="{{ $foto->judul }}" class="img-fluid rounded shadow" style="max-height: 500px;">
+                                <img src="{{ Storage::url($foto->file) }}" alt="{{ $foto->galery->post->judul }}" class="img-fluid rounded shadow" style="max-height: 500px;">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -34,7 +34,6 @@
                                     <h6 class="card-title mb-0">Informasi Foto</h6>
                                 </div>
                                 <div class="card-body">
-                                    <p><strong>Judul:</strong> {{ $foto->judul }}</p>
                                     <p><strong>Galeri:</strong> {{ $foto->galery->post->judul }}</p>
                                     <p><strong>Position Galeri:</strong> {{ $foto->galery->position }}</p>
                                     <p><strong>File:</strong> {{ basename($foto->file) }}</p>

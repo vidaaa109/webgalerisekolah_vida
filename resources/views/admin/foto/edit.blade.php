@@ -14,36 +14,21 @@
                     <form action="{{ route('admin.foto.update', $foto) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="galery_id" class="form-label">Galeri</label>
-                                    <select class="form-select @error('galery_id') is-invalid @enderror" 
-                                            id="galery_id" name="galery_id" required>
-                                        <option value="">Pilih Galeri</option>
-                                        @foreach($galeries as $galery)
-                                            <option value="{{ $galery->id }}" 
-                                                    {{ old('galery_id', $foto->galery_id) == $galery->id ? 'selected' : '' }}>
-                                                {{ $galery->post->judul }} (Position: {{ $galery->position }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('galery_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="judul" class="form-label">Judul Foto</label>
-                                    <input type="text" class="form-control @error('judul') is-invalid @enderror" 
-                                           id="judul" name="judul" value="{{ old('judul', $foto->judul) }}" 
-                                           placeholder="Masukkan judul foto" required>
-                                    @error('judul')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="galery_id" class="form-label">Galeri</label>
+                            <select class="form-select @error('galery_id') is-invalid @enderror" 
+                                    id="galery_id" name="galery_id" required>
+                                <option value="">Pilih Galeri</option>
+                                @foreach($galeries as $galery)
+                                    <option value="{{ $galery->id }}" 
+                                            {{ old('galery_id', $foto->galery_id) == $galery->id ? 'selected' : '' }}>
+                                        {{ $galery->post->judul }} (Position: {{ $galery->position }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('galery_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
@@ -60,7 +45,7 @@
                         <div class="mb-3">
                             <label class="form-label">Foto Saat Ini</label>
                             <div>
-                                <img src="{{ Storage::url($foto->file) }}" alt="{{ $foto->judul }}" class="img-thumbnail" style="max-width: 200px;">
+                                <img src="{{ Storage::url($foto->file) }}" alt="Foto {{ $foto->galery->post->judul }}" class="img-thumbnail" style="max-width: 200px;">
                             </div>
                         </div>
                         @endif

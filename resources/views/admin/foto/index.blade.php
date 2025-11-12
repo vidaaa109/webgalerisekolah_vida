@@ -3,13 +3,28 @@
 @section('title', 'Foto - Admin SMKN 4 BOGOR')
 @section('page-title', 'Foto')
 
+@push('styles')
+<style>
+    .foto-card {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .foto-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Daftar Foto</h5>
-                    <a href="{{ route('admin.foto.create') }}" class="btn btn-primary">
+                    <div>
+                        <h5 class="card-title mb-1">Daftar Foto</h5>
+                        <p class="text-muted small mb-0">Kelola foto dalam galeri</p>
+                    </div>
+                    <a href="{{ route('admin.foto.create') }}" class="btn btn-primary" style="box-shadow: 0 2px 8px rgba(13,110,253,.25);">
                         <i class="fas fa-plus me-2"></i>Upload Foto
                     </a>
                 </div>
@@ -24,7 +39,7 @@
                     <div class="row">
                         @forelse($fotos as $foto)
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card foto-card">
                                 <img src="{{ Storage::url($foto->file) }}" class="card-img-top" alt="Foto" style="height: 200px; object-fit: cover;">
                                 <div class="card-body">
                                     <p class="card-text mb-2">

@@ -4,8 +4,8 @@
 
 @section('content')
 <style>
-  .back-btn-detail { display: inline-flex; align-items: center; gap: 8px; color: #0f172a; text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 999px; background: #f1f5f9; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
-  .back-btn-detail:hover { background: #e2e8f0; color: #0f172a; }
+  .back-btn-detail { display: inline-flex; align-items: center; gap: 8px; color: #0f172a; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 10px; background: #fff; border: 2px solid #0f172a; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(15,23,42,.1); }
+  .back-btn-detail:hover { background: #0f172a; color: #fff; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(15,23,42,.2); }
   .detail-carousel { padding: 20px 16px 16px 16px; }
   .detail-carousel img { border-radius: 16px; max-height: 45vh; object-fit: contain; background: #000; }
   @media (max-width: 991.98px) { 
@@ -14,8 +14,8 @@
     .row.g-4 > .col-lg-7, .row.g-4 > .col-lg-5 { margin-bottom: 1.5rem; }
   }
   /* Recommendation cards */
-  .recommendation-card { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; transition: transform 0.2s ease; }
-  .recommendation-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+  .recommendation-card { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(15,23,42,.08); }
+  .recommendation-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(15,23,42,.15); }
   .recommendation-card img { width: 100%; height: 100%; object-fit: cover; }
   
   /* Photo caption style (Instagram-like) */
@@ -44,7 +44,7 @@
             <div class="carousel-inner">
               @forelse($galery->fotos as $idx => $foto)
                 <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
-                  <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $foto->judul }}" data-title="{{ $foto->judul }}">
+                  <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $galery->post->judul }}" data-title="{{ $galery->post->judul }}">
                 </div>
               @empty
                 <div class="p-5 text-center text-muted">Tidak ada foto</div>
@@ -69,7 +69,7 @@
             @endif
           </div>
           <div class="photo-caption" id="photoCaption">
-            <strong>{{ $galery->fotos->first()?->judul ?? 'Foto Galeri' }}</strong>
+            <strong>{{ $galery->post->judul }}</strong>
           </div>
           <div class="p-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
             <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -159,8 +159,11 @@
         </div>
       </div>
       <div class="col-lg-5">
-        <div class="fw-semibold mb-2">Rekomendasi</div>
-        <div class="row g-2">
+        <div class="mb-3">
+          <h5 class="fw-bold mb-1" style="color:#0f172a;">Galeri Lainnya</h5>
+          <p class="text-muted small mb-0">Galeri yang mungkin Anda suka</p>
+        </div>
+        <div class="row g-3">
           @foreach($recommendations as $g)
             <div class="col-6 col-md-4 col-lg-6">
               <a href="{{ route('guest.galeri.show', $g) }}" class="recommendation-card d-block">

@@ -56,18 +56,23 @@
         @forelse($posts as $post)
         <div class="col-md-6 col-lg-4">
             <div class="card agenda-card shadow-sm">
+                @if($post->galeries->isNotEmpty() && $post->galeries->first()->fotos->isNotEmpty())
+                <img src="{{ Storage::url($post->galeries->first()->fotos->first()->file) }}" class="card-img-top" alt="{{ $post->judul }}" style="height: 200px; object-fit: cover;">
+                @endif
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="agenda-date">
-                            <div class="day">{{ $post->created_at->format('d') }}</div>
-                            <div class="month">{{ $post->created_at->format('M') }}</div>
-                        </div>
-                        <div>
-                            <h5 class="card-title fw-bold mb-2">{{ $post->judul }}</h5>
-                            <p class="text-muted small mb-0">
-                                <i class="far fa-user me-1"></i>
-                                {{ $post->petugas->username }}
-                            </p>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="agenda-date" style="min-width: 60px; padding: 0.6rem;">
+                                <div class="day" style="font-size: 1.5rem;">{{ $post->created_at->format('d') }}</div>
+                                <div class="month" style="font-size: 0.75rem;">{{ $post->created_at->format('M') }}</div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="card-title fw-bold mb-1">{{ $post->judul }}</h5>
+                                <p class="text-muted small mb-0">
+                                    <i class="far fa-user me-1"></i>
+                                    {{ $post->petugas->username }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                     

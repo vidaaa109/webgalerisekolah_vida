@@ -138,45 +138,60 @@
                 </div>
             </div>
             
-            <!-- Form Kirim Pesan -->
+            <!-- Form Kirim Pesan/Testimoni -->
             <div class="row mt-5">
                 <div class="col-lg-8 mx-auto">
                     <div class="card border-0 shadow">
                         <div class="card-header bg-primary text-white text-center">
-                            <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Kirim Pesan</h5>
+                            <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Kirim Testimoni</h5>
                         </div>
                         <div class="card-body p-4">
-                            <form id="testimonialForm">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="nama" class="form-label">Nama Lengkap</label>
-                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama lengkap" required>
+                            @auth('user')
+                                <!-- Form untuk user yang sudah login -->
+                                <div class="alert alert-info mb-4">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Halo <strong>{{ Auth::guard('user')->user()->name ?? Auth::guard('user')->user()->username }}</strong>, kirimkan testimoni Anda!
+                                </div>
+                                
+                                <form id="testimonialForm">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label for="pesan" class="form-label">Testimoni / Pesan</label>
+                                        <textarea class="form-control" id="pesan" name="pesan" rows="5" placeholder="Tuliskan testimoni atau pesan Anda tentang SMKN 4 BOGOR..." required></textarea>
+                                        <div class="form-text">Maksimal 1000 karakter</div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email" required>
+                                    
+                                    <!-- reCAPTCHA -->
+                                    <div class="mb-4 d-flex justify-content-center">
+                                        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="pesan" class="form-label">Pesan</label>
-                                    <textarea class="form-control" id="pesan" name="pesan" rows="4" placeholder="Tuliskan pesan Anda" required></textarea>
-                                </div>
-                                <!-- reCAPTCHA -->
-                                <div class="mb-3 d-flex justify-content-center">
-                                    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                                </div>
 
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
-                                        <i class="fas fa-paper-plane me-2"></i>Kirim Pesan
-                                    </button>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                            <i class="fas fa-paper-plane me-2"></i>Kirim Testimoni
+                                        </button>
+                                    </div>
+                                </form>
+                                
+                                <!-- Alert untuk feedback -->
+                                <div id="alertContainer" class="mt-3"></div>
+                            @else
+                                <!-- Pesan untuk user yang belum login -->
+                                <div class="text-center py-5">
+                                    <i class="fas fa-lock fa-4x text-muted mb-4"></i>
+                                    <h4 class="mb-3">Login Diperlukan</h4>
+                                    <p class="text-muted mb-4">Anda harus login terlebih dahulu untuk mengirim testimoni.</p>
+                                    <div class="d-flex gap-3 justify-content-center">
+                                        <a href="{{ route('user.login') }}" class="btn btn-primary btn-lg px-4">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                                        </a>
+                                        <a href="{{ route('user.register') }}" class="btn btn-outline-primary btn-lg px-4">
+                                            <i class="fas fa-user-plus me-2"></i>Daftar
+                                        </a>
+                                    </div>
                                 </div>
-                            </form>
-                            
-                            <!-- Alert untuk feedback -->
-                            <div id="alertContainer" class="mt-3"></div>
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -185,6 +200,7 @@
     </section>
 
     <!-- JavaScript for Testimonial Form -->
+    @auth('user')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const testimonialForm = document.getElementById('testimonialForm');
@@ -202,7 +218,7 @@
                     // Get form data
                     const formData = new FormData(this);
                     
-                    // Send AJAX request (FormData sudah membawa g-recaptcha-response jika dicentang)
+                    // Send AJAX request
                     fetch('{{ route("testimonial.store") }}', {
                         method: 'POST',
                         body: formData,
@@ -212,30 +228,34 @@
                             'Accept': 'application/json'
                         }
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         if (data.success) {
                             showAlert('success', data.message);
                             testimonialForm.reset();
-                            if (typeof grecaptcha !== 'undefined') { grecaptcha.reset(); }
+                            if (typeof grecaptcha !== 'undefined') { 
+                                grecaptcha.reset(); 
+                            }
                         } else {
-                            const msg = data.message || (data.errors && (data.errors['g-recaptcha-response'] || []).join(', ')) || 'Terjadi kesalahan';
-                            showAlert('danger', msg);
+                            // Handle validation errors
+                            let errorMessage = data.message || 'Terjadi kesalahan';
+                            
+                            if (data.errors) {
+                                const errors = Object.values(data.errors).flat();
+                                errorMessage = errors.join('<br>');
+                            }
+                            
+                            showAlert('danger', errorMessage);
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        showAlert('danger', 'Terjadi kesalahan saat mengirim pesan: ' + error.message);
+                        showAlert('danger', 'Terjadi kesalahan saat mengirim testimoni. Silakan coba lagi.');
                     })
                     .finally(() => {
                         // Re-enable submit button
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Pesan';
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Testimoni';
                     });
                 });
             }
@@ -248,15 +268,19 @@
                     </div>
                 `;
                 
-                // Auto hide after 5 seconds
+                // Scroll to alert
+                alertContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Auto hide after 8 seconds
                 setTimeout(() => {
                     const alert = alertContainer.querySelector('.alert');
                     if (alert) {
                         alert.remove();
                     }
-                }, 5000);
+                }, 8000);
             }
         });
     </script>
+    @endauth
 @endsection
 

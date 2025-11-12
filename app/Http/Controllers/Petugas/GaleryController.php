@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Petugas;
 use App\Http\Controllers\Controller;
 use App\Models\Galery;
 use App\Models\Post;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class GaleryController extends Controller
@@ -23,8 +24,10 @@ class GaleryController extends Controller
      */
     public function create()
     {
-        $posts = Post::all();
-        return view('petugas.galery.create', compact('posts'));
+        $posts = Post::with('kategori')->where('status', 'published')->get();
+        $categories = Kategori::all();
+        $maxPosition = Galery::max('position') ?? 0;
+        return view('petugas.galery.create', compact('posts', 'categories', 'maxPosition'));
     }
 
     /**
@@ -57,8 +60,10 @@ class GaleryController extends Controller
      */
     public function edit(Galery $galery)
     {
-        $posts = Post::all();
-        return view('petugas.galery.edit', compact('galery', 'posts'));
+        $posts = Post::with('kategori')->where('status', 'published')->get();
+        $categories = Kategori::all();
+        $maxPosition = Galery::max('position') ?? 0;
+        return view('petugas.galery.edit', compact('galery', 'posts', 'categories', 'maxPosition'));
     }
 
     /**

@@ -125,11 +125,17 @@
             <div class="container">
                 <div class="row align-items-center min-vh-100">
                     <div class="col-lg-6 animate-fadeInUp">
-                        <h1 class="display-3 fw-bold mb-4 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation-delay: 0.2s;">Selamat Datang di SMKN 4 BOGOR</h1>
-                        <p class="lead mb-4 text-white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-size: 1.25rem; animation-delay: 0.4s;">Membangun Generasi Unggul, Berkarakter, dan Berwawasan Lingkungan</p>
+                        <h1 class="display-3 fw-bold mb-4 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation-delay: 0.2s;">Selamat Datang di Web Galeri Sekolah</h1>
+                        <p class="lead mb-4 text-white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-size: 1.25rem; animation-delay: 0.4s;">
+                            @if($profile)
+                                {{ Str::limit(strip_tags($profile->isi), 200) }}
+                            @else
+                                Membangun Generasi Unggul, Berkarakter, dan Berwawasan Lingkungan
+                            @endif
+                        </p>
                         <div class="d-flex gap-3 animate-slideInLeft" style="animation-delay: 0.6s;">
                             <a href="{{ route('guest.profil') }}" class="btn btn-primary btn-lg px-4 py-3" style="border-radius: 8px; font-weight: 600;">
-                                <i class="fas fa-info-circle me-2"></i>Tentang Kami
+                                <i class="fas fa-school me-2"></i>Lihat Profil Sekolah
                             </a>
                             <a href="{{ route('guest.galeri') }}" class="btn btn-outline-light btn-lg px-4 py-3" style="border-radius: 8px; font-weight: 600; border-width: 2px;">
                                 <i class="fas fa-images me-2"></i>Lihat Galeri
@@ -441,6 +447,16 @@
                         <span class="visually-hidden">Loading...</span>
                     </div>
                     <p class="mt-2 text-muted">Memuat testimoni...</p>
+                </div>
+            </div>
+            
+            <!-- CTA Button to Contact Page -->
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <a href="{{ route('guest.kontak') }}" class="btn btn-primary btn-lg px-5 shadow">
+                        <i class="fas fa-paper-plane me-2"></i>Kirim Testimoni Anda
+                    </a>
+                    <p class="text-muted mt-3 small">Bagikan pengalaman Anda di SMKN 4 BOGOR</p>
                 </div>
             </div>
         </div>

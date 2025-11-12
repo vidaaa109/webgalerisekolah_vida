@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Galery;
 use App\Models\Post;
 use App\Models\Foto;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,8 +20,10 @@ class GaleryController extends Controller
 
     public function create()
     {
-        $posts = Post::where('status', 'published')->get();
-        return view('admin.galery.create', compact('posts'));
+        $posts = Post::with('kategori')->where('status', 'published')->get();
+        $categories = Kategori::all();
+        $maxPosition = Galery::max('position') ?? 0;
+        return view('admin.galery.create', compact('posts', 'categories', 'maxPosition'));
     }
 
     public function store(Request $request)
@@ -48,7 +51,6 @@ class GaleryController extends Controller
                 $path = $file->storeAs('fotos', $filename, 'public');
                 Foto::create([
                     'galery_id' => $galery->id,
-                    'judul' => 'Foto ' . ($idx + 1),
                     'file' => $path,
                 ]);
                 $uploaded++;
@@ -75,8 +77,10 @@ class GaleryController extends Controller
 
     public function edit(Galery $galery)
     {
-        $posts = Post::where('status', 'published')->get();
-        return view('admin.galery.edit', compact('galery', 'posts'));
+        $posts = Post::with('kategori')->where('status', 'published')->get();
+        $categories = Kategori::all();
+        $maxPosition = Galery::max('position') ?? 0;
+        return view('admin.galery.edit', compact('galery', 'posts', 'categories', 'maxPosition'));
     }
 
     public function update(Request $request, Galery $galery)

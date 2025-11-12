@@ -55,6 +55,30 @@
                     </div>
                 </div>
                 
+                @if($post->galeries->isNotEmpty() && $post->galeries->first()->fotos->isNotEmpty())
+                <div class="mb-4">
+                    <div id="agendaCarousel" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-inner" style="border-radius: 12px; overflow: hidden;">
+                            @foreach($post->galeries->first()->fotos as $idx => $foto)
+                            <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
+                                <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $post->judul }}" style="max-height: 400px; object-fit: cover;">
+                            </div>
+                            @endforeach
+                        </div>
+                        @if($post->galeries->first()->fotos->count() > 1)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#agendaCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#agendaCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        @endif
+                    </div>
+                </div>
+                @endif
+                
                 <hr class="my-4">
                 
                 <div class="content">

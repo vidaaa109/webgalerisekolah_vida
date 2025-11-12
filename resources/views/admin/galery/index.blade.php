@@ -12,12 +12,12 @@
         white-space: nowrap;
     }
     .table tbody tr {
-        transition: all 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .table tbody tr:hover {
         background: #f8f9fa;
-        transform: scale(1.01);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transform: translateX(4px);
+        box-shadow: -4px 0 0 #0d6efd, 0 2px 8px rgba(0,0,0,0.08);
     }
     .badge {
         font-weight: 500;
@@ -39,8 +39,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Daftar Galeri</h5>
-                    <a href="{{ route('admin.galery.create') }}" class="btn btn-primary">
+                    <div>
+                        <h5 class="card-title mb-1">Daftar Galeri</h5>
+                        <p class="text-muted small mb-0">Kelola galeri foto sekolah</p>
+                    </div>
+                    <a href="{{ route('admin.galery.create') }}" class="btn btn-primary" style="box-shadow: 0 2px 8px rgba(13,110,253,.25);">
                         <i class="fas fa-plus me-2"></i>Tambah Galeri
                     </a>
                 </div>

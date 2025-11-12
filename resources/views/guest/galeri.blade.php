@@ -5,19 +5,21 @@
 @section('content')
     <style>
         /* Grid default: 4 desktop, 3 tablet, 2 mobile */
-        .gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; width:100%; }
-        @media (max-width: 991.98px) { .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        @media (max-width: 767.98px) { .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        .gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; width:100%; margin-bottom: 2rem; }
+        @media (max-width: 991.98px) { .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
+        @media (max-width: 767.98px) { .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
         /* Link pengklik memenuhi kartu */
         .gallery-link { position:absolute; inset:0; z-index:10; display:block; cursor:pointer; }
 
         /* Card */
-        .gallery-card { position:relative; border-radius:16px; overflow:hidden; background:#fff; box-shadow: 0 6px 18px rgba(15,23,42,.08); aspect-ratio:4/3; transition: transform .18s ease; isolation:isolate; cursor:pointer; }
-        .gallery-card:hover { transform: translateY(-2px) scale(1.01); }
+        .gallery-card { position:relative; border-radius:16px; overflow:hidden; background:#fff; box-shadow: 0 4px 12px rgba(15,23,42,.08); aspect-ratio:4/3; transition: all .2s cubic-bezier(0.4, 0, 0.2, 1); isolation:isolate; cursor:pointer; }
+        .gallery-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(15,23,42,.15); }
         .gallery-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:inherit; pointer-events:none; }
 
         /* Overlay hover */
-        .gallery-overlay { position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:space-between; padding:.5rem; pointer-events:none; opacity:0; transition: opacity .35s ease; z-index:15; }
+        .gallery-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:stretch; justify-content:space-between; padding:.5rem; pointer-events:none; opacity:0; transition: opacity .35s ease; z-index:15; }
+        .gallery-title-overlay { background: linear-gradient(to top, rgba(15,23,42,.9) 0%, transparent 100%); padding:1rem .5rem .5rem; display:flex; align-items:center; justify-content:center; }
+        .gallery-title-text { color:#fff; font-weight:700; font-size:14px; text-align:center; line-height:1.3; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .fade-slide { opacity:0; transform: translateY(-8px); transition: opacity .35s ease, transform .35s ease; pointer-events:none; }
         .gallery-card:hover .gallery-overlay { opacity:1; pointer-events:none; }
         .gallery-card:hover .fade-slide { opacity:1; transform: translateY(0); pointer-events:none; }
@@ -82,29 +84,38 @@
         }
 
         /* Header chips (tetap) */
-        .cats { display:flex; flex-wrap:wrap; gap:10px; }
-        .cat-chip { display:inline-flex; align-items:center; justify-content:center; padding:.55rem .85rem; background:#0f172a; color:#fff; border-radius:8px; text-decoration:none; border:2px solid #0f172a; transition: all 0.2s ease; font-weight:600; font-size:14px; }
-        .cat-chip:hover { background:#1e293b; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(15,23,42,.15); }
-        .cat-chip.is-light { background:#f1f5f9; color:#0f172a; border-color:#e2e8f0; }
-        .cat-chip.is-light:hover { background:#e2e8f0; }
+        .cats { display:flex; flex-wrap:wrap; gap:12px; padding: 0.5rem 0; }
+        .cat-chip { display:inline-flex; align-items:center; justify-content:center; padding:.6rem 1rem; background:#0f172a; color:#fff; border-radius:10px; text-decoration:none; border:2px solid #0f172a; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-weight:600; font-size:14px; box-shadow: 0 2px 4px rgba(15,23,42,.1); }
+        .cat-chip:hover { background:#1e293b; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(15,23,42,.2); color:#fff; }
+        .cat-chip.is-light { background:#fff; color:#0f172a; border-color:#0f172a; box-shadow: 0 2px 8px rgba(15,23,42,.12); }
+        .cat-chip.is-light:hover { background:#0f172a; color:#fff; border-color:#0f172a; }
     </style>
 
     <section class="py-4">
         <div class="container">
             <div class="mb-4 text-center">
                 <h2 class="h3 mb-3" style="font-weight:700; color:#0f172a;">Galeri Sekolah</h2>
-                @isset($categories)
+                @if($filterPosts->isNotEmpty())
                     <div class="cats justify-content-center">
-                        <a href="{{ request()->url() }}" class="cat-chip {{ !request('kategori') ? 'is-light' : '' }}">Semua</a>
-                        @foreach($categories as $cat)
-                            <a href="{{ request()->fullUrlWithQuery(['kategori' => $cat->id]) }}" 
-                               class="cat-chip {{ request('kategori') == $cat->id ? 'is-light' : '' }}">
-                                {{ $cat->judul }}
+                        <a href="{{ request()->url() }}" class="cat-chip {{ !request('post') ? 'is-light' : '' }}">Semua Galeri</a>
+                        @foreach($filterPosts as $filterPost)
+                            <a href="{{ request()->fullUrlWithQuery(['post' => $filterPost->id]) }}" 
+                               class="cat-chip {{ request('post') == $filterPost->id ? 'is-light' : '' }}">
+                                {{ $filterPost->judul }}
                             </a>
                         @endforeach
                     </div>
-                @endisset
+                @endif
             </div>
+            @if($galeries->isEmpty())
+            <div class="text-center py-5">
+                <div style="font-size: 4rem; color: #e2e8f0; margin-bottom: 1rem;">
+                    <i class="bi bi-images"></i>
+                </div>
+                <h5 class="text-muted mb-2">Belum Ada Galeri</h5>
+                <p class="text-muted small">Galeri akan muncul di sini ketika sudah ditambahkan</p>
+            </div>
+            @else
             <div class="gallery-grid">
                 @foreach($galeries as $galery)
                     @php($photos = $galery->fotos)
@@ -113,8 +124,13 @@
                         <img src="{{ $first ? Storage::url($first->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="" loading="lazy">
                         <a class="gallery-link" href="{{ route('guest.galeri.show', $galery) }}" aria-label="Buka galeri"></a>
                         <div class="gallery-overlay fade-slide">
-                            <a class="icon-btn" title="Unduh" id="dl-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download onclick="event.stopPropagation();"><i class="bi bi-download"></i></a>
-                            <button type="button" class="icon-btn" title="Simpan" onclick="return bookmarkTile(event, '{{ $galery->id }}')"><i class="bi bi-bookmark"></i></button>
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <a class="icon-btn" title="Unduh" id="dl-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download onclick="event.stopPropagation();"><i class="bi bi-download"></i></a>
+                                <button type="button" class="icon-btn" title="Simpan" onclick="return bookmarkTile(event, '{{ $galery->id }}')"><i class="bi bi-bookmark"></i></button>
+                            </div>
+                            <div class="gallery-title-overlay">
+                                <div class="gallery-title-text">{{ $galery->post->judul }}</div>
+                            </div>
                         </div>
                         <button type="button" class="gallery-arrow left" onclick="return cycleTile(event, '{{ $galery->id }}', -1)"><i class="bi bi-chevron-left"></i></button>
                         <button type="button" class="gallery-arrow right" onclick="return cycleTile(event, '{{ $galery->id }}', 1)"><i class="bi bi-chevron-right"></i></button>
@@ -124,11 +140,15 @@
                     </div>
                 @endforeach
             </div>
+            @endif
 
             {{-- Section untuk Posts dengan kategori "Galeri Sekolah" --}}
             @if($galeriPosts->isNotEmpty())
-            <div class="mt-5 pt-5">
-                <h3 class="h4 mb-4" style="font-weight:700; color:#0f172a;">Konten Galeri</h3>
+            <div class="mt-5 pt-4">
+                <div class="text-center mb-4">
+                    <h3 class="h4 mb-2" style="font-weight:700; color:#0f172a;">Artikel Galeri</h3>
+                    <p class="text-muted small">Informasi dan artikel terkait galeri sekolah</p>
+                </div>
                 <div class="row g-4">
                     @foreach($galeriPosts as $post)
                     <div class="col-md-6 col-lg-4">

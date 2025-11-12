@@ -35,8 +35,7 @@ class FotoController extends Controller
     {
         $request->validate([
             'galery_id' => 'required|exists:galery,id',
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'judul' => 'required|string|max:255'
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         // Upload file
@@ -47,8 +46,7 @@ class FotoController extends Controller
 
             Foto::create([
                 'galery_id' => $request->galery_id,
-                'file' => $filename,
-                'judul' => $request->judul
+                'file' => $filename
             ]);
         }
         
@@ -79,13 +77,11 @@ class FotoController extends Controller
     {
         $request->validate([
             'galery_id' => 'required|exists:galery,id',
-            'file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'judul' => 'required|string|max:255'
+            'file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $data = [
-            'galery_id' => $request->galery_id,
-            'judul' => $request->judul
+            'galery_id' => $request->galery_id
         ];
 
         // Upload new file if provided

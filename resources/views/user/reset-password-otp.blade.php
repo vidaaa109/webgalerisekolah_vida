@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login User - SMKN 4 BOGOR</title>
+    <title>Verifikasi OTP - SMKN 4 BOGOR</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
             align-items: center;
         }
         
-        .login-container {
+        .otp-container {
             background: white;
             border-radius: 1rem;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -32,7 +32,7 @@
             border: 1px solid rgba(0,0,0,0.05);
         }
         
-        .login-header {
+        .otp-header {
             background: white;
             color: var(--primary-color);
             padding: 2.5rem 2rem;
@@ -40,14 +40,14 @@
             border-bottom: 1px solid #e5e7eb;
         }
         
-        .login-header img {
+        .otp-header img {
             height: 80px;
             width: auto;
             margin-bottom: 1.5rem;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
         }
         
-        .login-body {
+        .otp-body {
             padding: 2.5rem 2rem;
             background: #fafbfc;
         }
@@ -59,33 +59,16 @@
             font-size: 0.95rem;
             transition: all 0.3s ease;
             background: white;
+            text-align: center;
+            letter-spacing: 0.5rem;
+            font-weight: 600;
+            font-size: 1.5rem;
         }
         
         .form-control:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.15);
             transform: translateY(-1px);
-        }
-        
-        .input-group-text {
-            background: #f8f9fa;
-            border: 2px solid #e5e7eb;
-            border-right: none;
-            color: var(--primary-color);
-            border-radius: 0.75rem 0 0 0.75rem;
-        }
-        
-        .input-group .form-control {
-            border-left: none;
-            border-radius: 0 0.75rem 0.75rem 0;
-        }
-        
-        .input-group .form-control:focus {
-            border-left: none;
-        }
-        
-        .input-group:focus-within .input-group-text {
-            border-color: var(--primary-color);
         }
         
         .btn-primary {
@@ -109,25 +92,14 @@
             transform: translateY(0);
         }
         
-        .btn-outline-secondary {
-            border-radius: 0 0.75rem 0.75rem 0;
-            border: 2px solid #e5e7eb;
-            border-left: none;
-        }
-        
-        .btn-outline-secondary:hover {
-            background: #f3f4f6;
-            color: var(--primary-color);
-        }
-        
-        .back-link, .forgot-link, .register-link {
+        .btn-link {
             color: #6b7280;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
         }
         
-        .back-link:hover, .forgot-link:hover, .register-link:hover {
+        .btn-link:hover {
             color: var(--primary-color);
         }
         
@@ -137,9 +109,15 @@
             margin-bottom: 0.5rem;
         }
         
-        .login-title {
+        .otp-title {
             color: #1f2937;
             font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .otp-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
             margin-bottom: 2rem;
         }
         
@@ -154,20 +132,26 @@
             opacity: 0.8;
             font-weight: 500;
         }
+        
+        .otp-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
-                <div class="login-container">
-                    <div class="login-header">
+                <div class="otp-container">
+                    <div class="otp-header">
                         <img src="/images/logo-smkn4.png.png" alt="SMKN 4 BOGOR">
                         <h4 class="school-name mb-2">SMK Negeri 4 Kota Bogor</h4>
                         <p class="user-panel-text mb-0">Web Galeri Sekolah</p>
                     </div>
                     
-                    <div class="login-body">
+                    <div class="otp-body">
                         @if(session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
@@ -182,77 +166,48 @@
                             </div>
                         @endif
                         
-                        <h5 class="login-title text-center mb-4">Login User</h5>
+                        <div class="text-center">
+                            <i class="fas fa-lock otp-icon"></i>
+                        </div>
                         
-                        <form method="POST" action="{{ route('user.login') }}">
+                        <h5 class="otp-title text-center">Verifikasi Kode OTP</h5>
+                        <p class="otp-desc text-center">Masukkan kode 6 digit yang telah dikirim ke email Anda.</p>
+                        
+                        <form method="POST" action="{{ route('user.reset-password-otp.verify') }}">
                             @csrf
                             
-                            <div class="mb-3">
-                                <label for="identity" class="form-label">Email atau Username</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-user"></i>
-                                    </span>
-                                    <input type="text" class="form-control @error('identity') is-invalid @enderror" 
-                                           id="identity" name="identity" value="{{ old('identity') }}" 
-                                           placeholder="Masukkan email atau username" required autofocus>
-                                </div>
-                                @error('identity')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lock"></i>
-                                    </span>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                           id="password" name="password" placeholder="Masukkan password" required>
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                                @error('password')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <!-- reCAPTCHA -->
-                            <div class="mb-3">
-                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                                @error('g-recaptcha-response')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                            <div class="mb-4">
+                                <label for="otp" class="form-label text-center d-block">Kode OTP</label>
+                                <input type="text" class="form-control @error('otp') is-invalid @enderror" 
+                                       id="otp" name="otp" maxlength="6" 
+                                       placeholder="000000" required autofocus>
+                                @error('otp')
+                                    <div class="text-danger small mt-1 text-center">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                    <i class="fas fa-check-circle me-2"></i>Verifikasi
                                 </button>
                             </div>
                         </form>
                         
                         <div class="text-center mb-3">
-                            <a href="{{ route('user.forgot-password') }}" class="forgot-link">
-                                <i class="fas fa-key me-1"></i>Lupa Password?
-                            </a>
+                            <p class="text-muted mb-2">Tidak menerima kode?</p>
+                            <form method="POST" action="{{ route('user.reset-password-otp.resend') }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fas fa-redo me-1"></i>Kirim Ulang OTP
+                                </button>
+                            </form>
                         </div>
                         
                         <hr class="my-3">
                         
-                        <div class="text-center mb-3">
-                            <span class="text-muted">Belum punya akun?</span>
-                            <a href="{{ route('user.register') }}" class="register-link ms-1">
-                                <i class="fas fa-user-plus me-1"></i>Daftar Sekarang
-                            </a>
-                        </div>
-                        
                         <div class="text-center">
-                            <a href="{{ route('guest.home') }}" class="back-link">
-                                <i class="fas fa-arrow-left me-1"></i>Kembali ke Beranda
+                            <a href="{{ route('user.forgot-password') }}" class="btn-link">
+                                <i class="fas fa-arrow-left me-1"></i>Kembali
                             </a>
                         </div>
                     </div>
@@ -265,20 +220,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const password = document.getElementById('password');
-            const icon = this.querySelector('i');
-            
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+        // Auto-focus and format OTP input
+        const otpInput = document.getElementById('otp');
+        otpInput.addEventListener('input', function(e) {
+            // Only allow numbers
+            this.value = this.value.replace(/[^0-9]/g, '');
         });
     </script>
 </body>

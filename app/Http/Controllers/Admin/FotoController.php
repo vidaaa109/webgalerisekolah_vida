@@ -27,7 +27,6 @@ class FotoController extends Controller
         // Validasi fleksibel: support multiple (files[]), fallback single (file)
         $rules = [
             'galery_id' => 'required|exists:galery,id',
-            'judul' => 'required|string|max:255',
         ];
         // Jika multiple
         if ($request->hasFile('files')) {
@@ -49,7 +48,6 @@ class FotoController extends Controller
 
                 Foto::create([
                     'galery_id' => $validated['galery_id'],
-                    'judul' => $validated['judul'] . (count($request->file('files')) > 1 ? ' #' . ($idx + 1) : ''),
                     'file' => $path,
                 ]);
                 $uploaded++;
@@ -75,7 +73,6 @@ class FotoController extends Controller
 
         Foto::create([
             'galery_id' => $validated['galery_id'],
-            'judul' => $validated['judul'],
             'file' => $path,
         ]);
 
@@ -108,7 +105,6 @@ class FotoController extends Controller
     {
         $request->validate([
             'galery_id' => 'required|exists:galery,id',
-            'judul' => 'required|string|max:255',
             'file' => 'nullable|image|mimes:jpeg,png,jpg,gif'
         ]);
 

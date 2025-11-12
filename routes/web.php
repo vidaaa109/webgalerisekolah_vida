@@ -45,7 +45,8 @@ Route::get('/informasi/{post}', [GuestController::class, 'informasiShow'])->name
 Route::get('/galeri', [GuestController::class, 'galeri'])->name('guest.galeri');
 Route::get('/galeri/{galery}', [GuestController::class, 'galeriShow'])->name('guest.galeri.show');
 
-// Removed kontak route; contact is now handled in footer
+// Kontak
+Route::get('/kontak', [GuestController::class, 'kontak'])->name('guest.kontak');
 
 // Engagement Routes
 // Public download (bebas), dengan throttle untuk membatasi penyalahgunaan
@@ -80,6 +81,15 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [UserAuthController::class, 'login']);
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('logout');
+
+    // Forgot Password
+    Route::get('/forgot-password', [UserAuthController::class, 'showForgotPasswordForm'])->name('forgot-password');
+    Route::post('/forgot-password', [UserAuthController::class, 'sendResetOtp']);
+    Route::get('/reset-password-otp', [UserAuthController::class, 'showResetPasswordOtpForm'])->name('reset-password-otp');
+    Route::post('/reset-password-otp/verify', [UserAuthController::class, 'verifyResetOtp'])->name('reset-password-otp.verify');
+    Route::post('/reset-password-otp/resend', [UserAuthController::class, 'resendResetOtp'])->name('reset-password-otp.resend');
+    Route::get('/reset-password', [UserAuthController::class, 'showResetPasswordForm'])->name('reset-password-form');
+    Route::post('/reset-password', [UserAuthController::class, 'resetPassword'])->name('reset-password');
 
     // Profil (butuh login user)
     Route::middleware('auth:user')->group(function () {
