@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return route('user.login');
         });
+        
+        // Trust proxies for HTTPS
+        $middleware->trustProxies();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
