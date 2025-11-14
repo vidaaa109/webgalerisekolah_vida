@@ -42,8 +42,8 @@ class ResendMailService
                 'api_url' => $this->apiUrl
             ]);
             
-            // Send email via Resend API directly using HTTP
-            $response = Http::withHeaders([
+            // Send email via Resend API directly using HTTP with timeout
+            $response = Http::timeout(30)->withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
             ])->post($this->apiUrl, [

@@ -79,12 +79,20 @@ class UserAuthController extends Controller
         if ($user->email) {
             try {
                 $resendService = new ResendMailService();
-                $resendService->sendOtpEmail($user->email, $otp);
+                $sent = $resendService->sendOtpEmail($user->email, $otp);
+                if (!$sent) {
+                    Log::warning('ResendMailService returned false for register OTP', [
+                        'user_id' => $user->id,
+                        'email' => $user->email
+                    ]);
+                    // Continue anyway - OTP sudah tersimpan di database, user bisa request resend
+                }
             } catch (\Exception $e) {
-                Log::error('Failed to send OTP email: ' . $e->getMessage(), [
+                Log::error('Exception when sending register OTP email', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ]);
                 // Continue anyway - OTP sudah tersimpan di database, user bisa request resend
             }
@@ -156,15 +164,20 @@ class UserAuthController extends Controller
                 $resendService = new ResendMailService();
                 $sent = $resendService->sendOtpEmail($user->email, $otp);
                 if (!$sent) {
-                    return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+                    Log::warning('ResendMailService returned false for resend OTP', [
+                        'user_id' => $user->id,
+                        'email' => $user->email
+                    ]);
+                    return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.']);
                 }
             } catch (\Exception $e) {
-                Log::error('Failed to resend OTP email: ' . $e->getMessage(), [
+                Log::error('Exception when resending OTP email', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ]);
-                return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+                return back()->withErrors(['otp' => 'Gagal mengirim email: ' . $e->getMessage()]);
             }
         }
 
@@ -397,15 +410,20 @@ class UserAuthController extends Controller
             $resendService = new ResendMailService();
             $sent = $resendService->sendOtpEmail($user->email, $otp);
             if (!$sent) {
-                return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+                Log::warning('ResendMailService returned false for resend reset password OTP', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+                return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.']);
             }
         } catch (\Exception $e) {
-            Log::error('Failed to resend reset password OTP email: ' . $e->getMessage(), [
+            Log::error('Exception when resending reset password OTP email', [
                 'user_id' => $user->id,
                 'email' => $user->email,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-            return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+            return back()->withErrors(['otp' => 'Gagal mengirim email: ' . $e->getMessage()]);
         }
 
         return back()->with('status', 'OTP baru telah dikirim.');
