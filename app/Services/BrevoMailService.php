@@ -28,7 +28,12 @@ class BrevoMailService
             $html = View::make('emails.otp', ['otp' => $otp])->render();
             
             $fromName = config('mail.from.name', 'SMKN 4 BOGOR');
-            $fromAddress = config('mail.from.address', 'noreply@brevo.com');
+            $fromAddress = config('mail.from.address');
+            
+            // Validate from address
+            if (!$fromAddress || empty(trim($fromAddress, '"\''))) {
+                throw new \Exception('MAIL_FROM_ADDRESS tidak dikonfigurasi. Gunakan email yang sudah diverifikasi di Brevo.');
+            }
             
             // Remove quotes if present
             $fromAddress = trim($fromAddress, '"\'');
