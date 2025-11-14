@@ -180,9 +180,11 @@ class UserAuthController extends Controller
                 ]);
                 
                 // Extract user-friendly error message
-                if (str_contains($errorMessage, 'validation_error') || str_contains($errorMessage, 'invalid')) {
-                    $userMessage = 'Email tidak valid atau tidak dapat menerima email. Silakan gunakan email lain atau hubungi admin.';
-                } elseif (str_contains($errorMessage, 'rate_limit') || str_contains($errorMessage, 'too_many')) {
+                if (str_contains($errorMessage, '403') || str_contains($errorMessage, 'Akses ditolak') || str_contains($errorMessage, 'Domain email belum diverifikasi')) {
+                    $userMessage = 'Email tidak dapat dikirim. Domain email belum diverifikasi atau email tidak diizinkan. Silakan hubungi admin.';
+                } elseif (str_contains($errorMessage, 'validation_error') || str_contains($errorMessage, 'invalid') || str_contains($errorMessage, '422')) {
+                    $userMessage = 'Email tidak valid atau format tidak sesuai. Silakan periksa alamat email Anda.';
+                } elseif (str_contains($errorMessage, 'rate_limit') || str_contains($errorMessage, 'too_many') || str_contains($errorMessage, '429')) {
                     $userMessage = 'Terlalu banyak permintaan. Silakan coba lagi beberapa saat kemudian.';
                 } elseif (str_contains($errorMessage, 'unauthorized') || str_contains($errorMessage, '401')) {
                     $userMessage = 'Konfigurasi email tidak valid. Silakan hubungi admin.';

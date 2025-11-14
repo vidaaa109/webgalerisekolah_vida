@@ -65,10 +65,29 @@ class ResendMailService
                 $errorBody = $response->json();
                 $errorMessage = $errorBody['message'] ?? $response->body();
                 $errorType = $errorBody['type'] ?? 'unknown';
+                $statusCode = $response->status();
+                
+                // Handle specific error cases
+                if ($statusCode === 403) {
+                    // 403 Forbidden - usually means domain not verified or email not allowed
+                    if (str_contains(strtolower($errorMessage), 'domain') || str_contains(strtolower($errorMessage), 'verify')) {
+                        $errorMessage = 'Domain email belum diverifikasi. Silakan verifikasi domain di Resend dashboard atau hubungi admin.';
+                    } elseif (str_contains(strtolower($errorMessage), 'not allowed') || str_contains(strtolower($errorMessage), 'restricted')) {
+                        $errorMessage = 'Email tujuan tidak diizinkan. Dalam mode testing, Resend hanya mengizinkan email tertentu. Silakan hubungi admin untuk verifikasi domain.';
+                    } else {
+                        $errorMessage = 'Akses ditolak (403). Domain email mungkin belum diverifikasi atau email tidak diizinkan. Silakan hubungi admin.';
+                    }
+                } elseif ($statusCode === 422) {
+                    // 422 Validation Error
+                    $errorMessage = 'Email tidak valid atau format tidak sesuai. Silakan periksa alamat email Anda.';
+                } elseif ($statusCode === 429) {
+                    // 429 Rate Limit
+                    $errorMessage = 'Terlalu banyak permintaan. Silakan coba lagi beberapa saat kemudian.';
+                }
                 
                 Log::error('Resend API returned error', [
                     'to' => $to,
-                    'status' => $response->status(),
+                    'status' => $statusCode,
                     'error_type' => $errorType,
                     'error_message' => $errorMessage,
                     'full_response' => $errorBody,
@@ -77,7 +96,7 @@ class ResendMailService
                 ]);
                 
                 // Throw exception with detailed error for better debugging
-                throw new \Exception("Resend API Error ({$errorType}): {$errorMessage}");
+                throw new \Exception("Resend API Error ({$statusCode}): {$errorMessage}");
             }
         } catch (\Exception $e) {
             Log::error('Failed to send OTP email via Resend API', [
