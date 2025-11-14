@@ -157,14 +157,22 @@ class UserAuthController extends Controller
         $user->save();
 
         if ($user->email) {
+            // Send OTP via email menggunakan queue (async, tidak blocking)
             try {
-                Mail::to($user->email)->send(new OtpCodeMail($otp));
+                // Gunakan queue untuk mengirim email secara async
+                Mail::to($user->email)->queue(new OtpCodeMail($otp));
             } catch (\Exception $e) {
-                Log::error('Failed to resend OTP email: ' . $e->getMessage(), [
-                    'user_id' => $user->id,
-                    'email' => $user->email
-                ]);
-                return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+                // Jika queue tidak tersedia, coba kirim langsung
+                try {
+                    Mail::to($user->email)->send(new OtpCodeMail($otp));
+                } catch (\Exception $sendException) {
+                    Log::error('Failed to resend OTP email: ' . $sendException->getMessage(), [
+                        'user_id' => $user->id,
+                        'email' => $user->email,
+                        'error' => $sendException->getMessage()
+                    ]);
+                    return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+                }
             }
         }
 
@@ -282,18 +290,28 @@ class UserAuthController extends Controller
         $user->otp_expires_at = Carbon::now()->addMinutes(10);
         $user->save();
 
-        // Send OTP via email
+        // Simpan session dulu
+        session(['reset_password_user_id' => $user->id]);
+
+        // Send OTP via email menggunakan queue (async, tidak blocking)
         try {
-            Mail::to($user->email)->send(new OtpCodeMail($otp));
-            session(['reset_password_user_id' => $user->id]);
-            return redirect()->route('user.reset-password-otp')->with('status', 'Kode OTP telah dikirim ke email Anda.');
+            // Gunakan queue untuk mengirim email secara async
+            Mail::to($user->email)->queue(new OtpCodeMail($otp));
         } catch (\Exception $e) {
-            Log::error('Failed to send reset password OTP email: ' . $e->getMessage(), [
-                'user_id' => $user->id,
-                'email' => $user->email
-            ]);
-            return back()->withErrors(['email' => 'Gagal mengirim email. Silakan coba lagi.'])->withInput();
+            // Jika queue tidak tersedia, coba kirim langsung
+            try {
+                Mail::to($user->email)->send(new OtpCodeMail($otp));
+            } catch (\Exception $sendException) {
+                Log::error('Failed to send reset password OTP email: ' . $sendException->getMessage(), [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'error' => $sendException->getMessage()
+                ]);
+                return back()->withErrors(['email' => 'Gagal mengirim email. Silakan coba lagi.'])->withInput();
+            }
         }
+
+        return redirect()->route('user.reset-password-otp')->with('status', 'Kode OTP telah dikirim ke email Anda.');
     }
 
     public function showResetPasswordOtpForm()
@@ -379,15 +397,24 @@ class UserAuthController extends Controller
         $user->otp_expires_at = Carbon::now()->addMinutes(10);
         $user->save();
 
+        // Send OTP via email menggunakan queue (async, tidak blocking)
         try {
-            Mail::to($user->email)->send(new OtpCodeMail($otp));
-            return back()->with('status', 'OTP baru telah dikirim.');
+            // Gunakan queue untuk mengirim email secara async
+            Mail::to($user->email)->queue(new OtpCodeMail($otp));
         } catch (\Exception $e) {
-            Log::error('Failed to resend reset password OTP email: ' . $e->getMessage(), [
-                'user_id' => $user->id,
-                'email' => $user->email
-            ]);
-            return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+            // Jika queue tidak tersedia, coba kirim langsung
+            try {
+                Mail::to($user->email)->send(new OtpCodeMail($otp));
+            } catch (\Exception $sendException) {
+                Log::error('Failed to resend reset password OTP email: ' . $sendException->getMessage(), [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'error' => $sendException->getMessage()
+                ]);
+                return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi.']);
+            }
         }
+
+        return back()->with('status', 'OTP baru telah dikirim.');
     }
 }
