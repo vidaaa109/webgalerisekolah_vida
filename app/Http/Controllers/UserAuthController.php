@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Mail\OtpCodeMail;
+use App\Services\BrevoMailService;
 use Carbon\Carbon;
 
 class UserAuthController extends Controller
@@ -76,10 +75,18 @@ class UserAuthController extends Controller
         // Simpan sesi untuk verifikasi OTP
         session(['otp_user_id' => $user->id]);
 
-        // Kirim OTP via email menggunakan SMTP
+        // Kirim OTP via email menggunakan Brevo
         if ($user->email) {
             try {
-                Mail::to($user->email)->send(new OtpCodeMail($otp));
+                $brevoService = new BrevoMailService();
+                $sent = $brevoService->sendOtpEmail($user->email, $otp);
+                if (!$sent) {
+                    Log::warning('BrevoMailService returned false for register OTP', [
+                        'user_id' => $user->id,
+                        'email' => $user->email
+                    ]);
+                    // Continue anyway - OTP sudah tersimpan di database, user bisa request resend
+                }
             } catch (\Exception $e) {
                 Log::error('Exception when sending register OTP email', [
                     'user_id' => $user->id,
@@ -152,9 +159,17 @@ class UserAuthController extends Controller
         $user->save();
 
         if ($user->email) {
-            // Send OTP via email menggunakan SMTP
+            // Send OTP via email menggunakan Brevo
             try {
-                Mail::to($user->email)->send(new OtpCodeMail($otp));
+                $brevoService = new BrevoMailService();
+                $sent = $brevoService->sendOtpEmail($user->email, $otp);
+                if (!$sent) {
+                    Log::warning('BrevoMailService returned false for resend OTP', [
+                        'user_id' => $user->id,
+                        'email' => $user->email
+                    ]);
+                    return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.']);
+                }
             } catch (\Exception $e) {
                 Log::error('Exception when resending OTP email', [
                     'user_id' => $user->id,
@@ -283,9 +298,17 @@ class UserAuthController extends Controller
         // Simpan session dulu
         session(['reset_password_user_id' => $user->id]);
 
-        // Send OTP via email menggunakan SMTP
+        // Send OTP via email menggunakan Brevo
         try {
-            Mail::to($user->email)->send(new OtpCodeMail($otp));
+            $brevoService = new BrevoMailService();
+            $sent = $brevoService->sendOtpEmail($user->email, $otp);
+            if (!$sent) {
+                Log::warning('BrevoMailService returned false for reset password OTP', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+                return back()->withErrors(['email' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.'])->withInput();
+            }
         } catch (\Exception $e) {
             Log::error('Exception when sending reset password OTP email', [
                 'user_id' => $user->id,
@@ -382,9 +405,17 @@ class UserAuthController extends Controller
         $user->otp_expires_at = Carbon::now()->addMinutes(10);
         $user->save();
 
-        // Send OTP via email menggunakan SMTP
+        // Send OTP via email menggunakan Brevo
         try {
-            Mail::to($user->email)->send(new OtpCodeMail($otp));
+            $brevoService = new BrevoMailService();
+            $sent = $brevoService->sendOtpEmail($user->email, $otp);
+            if (!$sent) {
+                Log::warning('BrevoMailService returned false for resend reset password OTP', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+                return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.']);
+            }
         } catch (\Exception $e) {
             Log::error('Exception when resending reset password OTP email', [
                 'user_id' => $user->id,
