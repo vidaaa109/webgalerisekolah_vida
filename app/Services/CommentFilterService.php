@@ -8,7 +8,12 @@ class CommentFilterService
 
     public function __construct()
     {
-        $this->badWords = config('badwords.words', []);
+        $words = config('badwords.words', []);
+        $this->badWords = array_values(array_filter(array_map(static function ($word) {
+            return trim($word ?? '');
+        }, $words), static function ($word) {
+            return $word !== '';
+        }));
     }
 
     public function evaluate(string $text): array

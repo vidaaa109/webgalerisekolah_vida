@@ -30,6 +30,9 @@
   .carousel-inner { border-radius: 16px; overflow: hidden; position: relative; }
 </style>
 <section class="py-4">
+  @php
+    $visibleRootComments = $galery->comments->where('status', 'visible')->where('parent_id', null);
+  @endphp
   <div class="container">
     <div class="mb-3">
       <a href="{{ route('guest.galeri') }}" class="back-btn-detail">
@@ -81,7 +84,7 @@
               </form>
               <a href="#komentar" class="btn btn-outline-secondary d-flex align-items-center gap-1">
                 <i class="bi bi-chat"></i>
-                <span class="small">{{ $galery->total_comments ?? $galery->comments->count() }}</span>
+                <span class="small" id="commentBadgeCount">{{ $visibleRootComments->count() }}</span>
               </a>
               <button type="button" id="shareBtn" class="btn btn-outline-secondary"><i class="bi bi-share"></i></button>
               @if($galery->fotos->first())
@@ -96,10 +99,7 @@
           </div>
           <div id="komentar" class="p-3 border-top">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              @php
-                $visibleRootComments = $galery->comments->where('status', 'visible')->where('parent_id', null);
-              @endphp
-              <h6 class="fw-bold mb-0">Komentar ({{ $visibleRootComments->count() }})</h6>
+              <h6 class="fw-bold mb-0">Komentar (<span id="commentCount">{{ $visibleRootComments->count() }}</span>)</h6>
               <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#commentsSection" aria-expanded="true">
                 <i class="bi bi-chevron-up" id="toggleIcon"></i>
               </button>
@@ -107,7 +107,7 @@
             <div class="collapse show" id="commentsSection">
             
             @auth('user')
-            <form method="POST" action="{{ route('galleries.comments.store', $galery) }}" class="mb-4">
+            <form method="POST" action="{{ route('galleries.comments.store', $galery) }}" class="mb-4" id="commentForm">
               @csrf
               <div class="d-flex gap-2 align-items-start">
                 <div class="flex-shrink-0">
@@ -127,81 +127,18 @@
                 </div>
               </div>
             </form>
+            <div id="commentAlert" class="mb-3"></div>
             @else
             <div class="alert alert-info">
               <a href="{{ route('user.login') }}" class="alert-link">Login</a> untuk memberikan komentar.
             </div>
             @endauth
 
-            <div class="comments-list" style="max-height: 50vh; overflow-y:auto;">
+            <div class="comments-list" style="max-height: 50vh; overflow-y:auto;" id="commentsList">
               @forelse($visibleRootComments->sortByDesc('created_at') as $comment)
-                <div class="comment-item mb-3 pb-3 border-bottom">
-                  <div class="d-flex gap-2">
-                    <div class="flex-shrink-0">
-                      @if($comment->user?->profile_photo_path)
-                        <img src="{{ asset('storage/'.$comment->user->profile_photo_path) }}?v={{ $comment->user->updated_at?->timestamp ?? now()->timestamp }}" class="rounded-circle" style="width:36px;height:36px;object-fit:cover;" alt="">
-                      @else
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;background:#e2e8f0;color:#64748b;font-weight:700;font-size:14px;">
-                          {{ strtoupper(substr($comment->user?->name ?? 'U',0,1)) }}
-                        </div>
-                      @endif
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="fw-bold small d-flex justify-content-between align-items-center">
-                        <span>{{ $comment->user?->name ?? 'Pengguna' }}</span>
-                        @auth('user')
-                        <div class="d-flex gap-2">
-                          <form method="POST" action="{{ route('reports.store') }}">
-                            @csrf
-                            <input type="hidden" name="type" value="comment">
-                            <input type="hidden" name="target_id" value="{{ $comment->id }}">
-                            <input type="hidden" name="reason" value="Komentar tidak pantas">
-                            <button type="submit" class="btn btn-link p-0 text-danger text-decoration-none small">Laporkan Komentar</button>
-                          </form>
-                          @if($comment->user && $comment->user->id !== auth('user')->id())
-                          <form method="POST" action="{{ route('reports.store') }}">
-                            @csrf
-                            <input type="hidden" name="type" value="user">
-                            <input type="hidden" name="target_id" value="{{ $comment->user->id }}">
-                            <input type="hidden" name="reason" value="Perilaku pengguna tidak pantas">
-                            <button type="submit" class="btn btn-link p-0 text-warning text-decoration-none small">Laporkan Pengguna</button>
-                          </form>
-                          @endif
-                        </div>
-                        @endauth
-                      </div>
-                      <div class="text-muted" style="font-size:12px;">{{ $comment->created_at->diffForHumans() }}</div>
-                      <p class="mb-1 mt-1">{{ $comment->body }}</p>
-                      @php
-                        $childComments = $galery->comments->where('parent_id', $comment->id)->where('status', 'visible')->sortBy('created_at');
-                      @endphp
-                      @foreach($childComments as $child)
-                        <div class="mt-2 ps-4 border-start">
-                          <div class="d-flex gap-2">
-                            <div class="flex-shrink-0">
-                              @if($child->user?->profile_photo_path)
-                                <img src="{{ asset('storage/'.$child->user->profile_photo_path) }}?v={{ $child->user->updated_at?->timestamp ?? now()->timestamp }}" class="rounded-circle" style="width:32px;height:32px;object-fit:cover;" alt="">
-                              @else
-                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:#e2e8f0;color:#64748b;font-weight:700;font-size:12px;">
-                                  {{ strtoupper(substr($child->user?->name ?? 'U',0,1)) }}
-                                </div>
-                              @endif
-                            </div>
-                            <div class="flex-grow-1">
-                              <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-semibold small">{{ $child->user?->name ?? 'Pengguna' }}</span>
-                                <small class="text-muted">{{ $child->created_at->diffForHumans() }}</small>
-                              </div>
-                              <p class="mb-1">{{ $child->body }}</p>
-                            </div>
-                          </div>
-                        </div>
-                      @endforeach
-                    </div>
-                  </div>
-                </div>
+                @include('guest.partials.comment_item', ['comment' => $comment])
               @empty
-                <p class="text-muted small">Belum ada komentar.</p>
+                <p class="text-muted small" id="emptyComments">Belum ada komentar.</p>
               @endforelse
             </div>
             </div>
@@ -263,6 +200,85 @@
     });
     commentsSection.addEventListener('hide.bs.collapse', function () {
       toggleIcon.className = 'bi bi-chevron-down';
+    });
+  }
+
+  // Ajax submit comment
+  const commentForm = document.getElementById('commentForm');
+  if (commentForm) {
+    const commentAlert = document.getElementById('commentAlert');
+    const commentsList = document.getElementById('commentsList');
+    const commentCount = document.getElementById('commentCount');
+    const commentBadge = document.getElementById('commentBadgeCount');
+    let emptyState = document.getElementById('emptyComments');
+
+    const showAlert = (type, message) => {
+      if (!commentAlert) return;
+      commentAlert.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show mb-0" role="alert">
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+    };
+
+    const updateCounts = (value) => {
+      if (commentCount) commentCount.textContent = value;
+      if (commentBadge) commentBadge.textContent = value;
+    };
+
+    commentForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const submitBtn = commentForm.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn?.innerHTML;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Mengirim...';
+      }
+
+      try {
+        const response = await fetch(commentForm.action, {
+          method: 'POST',
+          body: new FormData(commentForm),
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const errors = data?.errors ? Object.values(data.errors).flat().join('<br>') : (data?.message || 'Terjadi kesalahan saat mengirim komentar.');
+          showAlert('danger', errors);
+          return;
+        }
+
+        showAlert(
+          data.status === 'visible' ? 'success' : 'warning',
+          data.message || (data.status === 'visible'
+            ? 'Komentar berhasil ditambahkan.'
+            : 'Komentar mengandung kata yang dibatasi dan menunggu peninjauan admin.')
+        );
+
+        if (data.status === 'visible' && data.html && commentsList) {
+          if (emptyState) {
+            emptyState.remove();
+            emptyState = null;
+          }
+          commentsList.insertAdjacentHTML('afterbegin', data.html);
+          updateCounts(data.visible_count ?? (parseInt(commentCount?.textContent || '0', 10) + 1));
+          commentForm.reset();
+        }
+      } catch (error) {
+        showAlert('danger', 'Tidak dapat mengirim komentar. Silakan coba lagi.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalLabel || 'Kirim';
+        }
+      }
     });
   }
 </script>

@@ -41,6 +41,7 @@
                         <th>Email</th>
                         <th>Username</th>
                         <th>Status</th>
+                        <th>Pelaporan</th>
                         <th>Terdaftar</th>
                         <th class="text-center">Aksi</th>
                     </tr>
@@ -57,6 +58,13 @@
                             </span>
                             @if($user->status === 'blocked' && $user->blocked_reason)
                                 <div><small class="text-muted">{{ $user->blocked_reason }}</small></div>
+                            @endif
+                        </td>
+                        <td>
+                            @if($user->reports_received_count > 0)
+                                <span class="badge bg-warning text-dark">{{ $user->reports_received_count }} laporan</span>
+                            @else
+                                <span class="text-muted small">-</span>
                             @endif
                         </td>
                         <td><small>{{ $user->created_at->format('d M Y') }}</small></td>
@@ -76,7 +84,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">Belum ada pengguna.</td>
+                        <td colspan="7" class="text-center text-muted py-4">Belum ada pengguna.</td>
                     </tr>
                     @endforelse
                 </tbody>

@@ -154,7 +154,18 @@ class GuestController extends Controller
         // Pastikan hanya galeri aktif yang bisa ditampilkan
         abort_unless($galery->status == 1, 404);
 
-        $galery->load(['post', 'fotos', 'likes', 'bookmarks', 'comments.user']);
+        $galery->load([
+            'post',
+            'fotos',
+            'likes',
+            'bookmarks',
+            'comments' => function ($query) {
+                $query->with([
+                    'user',
+                    'children.user',
+                ])->orderByDesc('created_at');
+            },
+        ]);
         $recommendations = Galery::with('fotos')
             ->where('status', 1)
             ->where('id', '!=', $galery->id)

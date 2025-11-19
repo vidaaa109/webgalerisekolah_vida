@@ -10,7 +10,11 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = User::query()->withCount([
+            'reports as reports_received_count' => function ($q) {
+                $q->where('type', 'user');
+            },
+        ]);
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {

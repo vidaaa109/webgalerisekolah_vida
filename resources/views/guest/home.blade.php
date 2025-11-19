@@ -159,7 +159,7 @@
                     <div class="col-lg-6 animate-fadeInUp">
                         <h1 class="display-3 fw-bold mb-4 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation-delay: 0.2s;">Selamat Datang di SMKN 4 BOGOR</h1>
                         <p class="lead mb-4 text-white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-size: 1.1rem; animation-delay: 0.4s;">
-                            SMKN 4 Bogor adalah sekolah menengah kejuruan negeri yang terletak di Kota Bogor. Kami menyelenggarakan pendidikan kejuruan berkualitas dengan berbagai program keahlian yang disesuaikan dengan kebutuhan dunia industri. SMKN 4 Bogor berkomitmen untuk menghasilkan lulusan yang kompeten, berkarakter, dan siap menghadapi tantangan di era globalisasi.
+                        SMKN 4 Bogor, sekolah kejuruan yang fokus membentuk siswa berkompeten, terampil, dan siap bersaing di dunia industri.   
                         </p>
                         <div class="d-flex hero-cta-buttons animate-slideInLeft" style="animation-delay: 0.6s;">
                             <a href="{{ route('guest.profil') }}" class="btn btn-lg hero-cta-btn hero-cta-btn-primary">
@@ -575,7 +575,13 @@
                         const container = document.getElementById('testimonialsContainer');
                         
                         if (data.success && data.data.length > 0) {
-                            container.innerHTML = data.data.map(testimonial => `
+                            container.innerHTML = data.data.map(testimonial => {
+                                const formattedDate = new Date(testimonial.created_at).toLocaleDateString('id-ID', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                });
+                                return `
                                 <div class="col-md-4">
                                     <div class="card h-100 border-0 shadow-sm">
                                         <div class="card-body p-4">
@@ -585,7 +591,7 @@
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-1 fw-bold">${testimonial.nama}</h6>
-                                                    <small class="text-muted">${testimonial.created_at}</small>
+                                                    <small class="text-muted">${formattedDate}</small>
                                                 </div>
                                             </div>
                                             <p class="card-text text-muted">"${testimonial.pesan}"</p>
@@ -599,7 +605,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            `).join('');
+                            `;
+                            }).join('');
                         } else {
                             container.innerHTML = `
                                 <div class="col-12 text-center">

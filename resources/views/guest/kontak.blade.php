@@ -3,48 +3,25 @@
 @section('title', 'Kontak - SMKN 4 BOGOR')
 
 @section('content')
-    <!-- Hero Section: Background Image -->
     <style>
-        .hero-banner-contact {
-            position: relative;
-            height: 60vh;
-            min-height: 400px;
-            background: linear-gradient(135deg, #0b244d 0%, #1096f7 50%, #0b244d 100%), url('/images/dashboarad.JPG') center/cover no-repeat;
-            background-blend-mode: overlay;
+        .contact-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 2rem;
         }
-        .hero-banner-contact .overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(11, 36, 77, 0.8) 0%, rgba(16, 150, 247, 0.6) 50%, rgba(11, 36, 77, 0.8) 100%);
-            backdrop-filter: blur(1px);
-        }
-        .hero-banner-contact h1 {
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-            font-weight: 800;
-        }
-        .hero-banner-contact p {
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        .contact-subtitle {
+            color: #4b5563;
+            font-size: 1rem;
         }
     </style>
-    <section class="hero-banner-contact">
-        <div class="overlay"></div>
-        <div class="container h-100 position-relative" style="z-index:2;">
-            <div class="row align-items-center h-100">
-                <div class="col-lg-8 text-white">
-                    <h1 class="display-4 fw-bold mb-3">Hubungi Kami</h1>
-                    <p class="lead mb-0 text-white-75">Kami siap membantu dan menjawab pertanyaan Anda</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Contact Section -->
     <section id="kontak" class="py-5 section-fade-in">
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="fw-bold text-primary">Hubungi Kami</h2>
-                    <div class="mx-auto" style="width: 60px; height: 3px; background: linear-gradient(90deg, #0b244d, #1096f7);"></div>
+                    <h2 class="contact-title mb-2">Hubungi Kami</h2>
+                    <p class="contact-subtitle mb-0">Kami siap membantu dan menjawab pertanyaan Anda</p>
                 </div>
             </div>
             

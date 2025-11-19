@@ -26,7 +26,15 @@ class ReportController extends Controller
 
         $reportable = $request->type === 'user'
             ? User::findOrFail($request->target_id)
-            : Comment::findOrFail($request->target_id);
+            : Comment::withTrashed()->findOrFail($request->target_id);
+
+        if ($request->type === 'user' && (int) $reportable->id === (int) $reporter->id) {
+            return back()->withErrors(['report' => 'Anda tidak dapat melaporkan akun sendiri.']);
+        }
+
+        if ($request->type === 'comment' && (int) $reportable->user_id === (int) $reporter->id) {
+            return back()->withErrors(['report' => 'Anda tidak dapat melaporkan komentar sendiri.']);
+        }
 
         Report::create([
             'reporter_id' => $reporter->id,
