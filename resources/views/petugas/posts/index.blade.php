@@ -37,6 +37,13 @@
                                     </td>
                                     <td class="d-none d-md-table-cell">
                                         <span class="badge bg-info">{{ $post->kategori->judul }}</span>
+                                        @if($post->kategoris->count() > 0)
+                                            <div class="mt-1">
+                                                @foreach($post->kategoris as $kat)
+                                                    <span class="badge bg-secondary me-1">{{ $kat->judul }}</span>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </td>
                                     <td class="d-none d-lg-table-cell">{{ $post->petugas->username }}</td>
                                     <td>

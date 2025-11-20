@@ -17,6 +17,17 @@
                     <div class="row">
                         <div class="col-md-8">
                             <h3>{{ $post->judul }}</h3>
+                            <div class="mb-3">
+                                <span class="badge bg-info me-2">{{ $post->kategori->judul }}</span>
+                                @if($post->kategoris->count() > 0)
+                                    @foreach($post->kategoris as $kat)
+                                        <span class="badge bg-secondary me-1">{{ $kat->judul }}</span>
+                                    @endforeach
+                                @endif
+                                <span class="badge bg-{{ $post->status === 'published' ? 'success' : 'warning' }} ms-1">
+                                    {{ ucfirst($post->status) }}
+                                </span>
+                            </div>
                             <div class="mt-3">
                                 {!! nl2br(e($post->isi)) !!}
                             </div>

@@ -28,7 +28,7 @@ class GuestController extends Controller
                 ->where(function($q) use ($agendaKategori) {
                     $q->where('kategori_id', $agendaKategori->id)
                       ->orWhereHas('kategoris', function($subq) use ($agendaKategori) {
-                          $subq->where('kategori_id', $agendaKategori->id);
+                          $subq->where('kategori.id', $agendaKategori->id);
                       });
                 })
                 ->latest()
@@ -45,7 +45,7 @@ class GuestController extends Controller
                 ->where(function($q) use ($informasiKategori) {
                     $q->where('kategori_id', $informasiKategori->id)
                       ->orWhereHas('kategoris', function($subq) use ($informasiKategori) {
-                          $subq->where('kategori_id', $informasiKategori->id);
+                          $subq->where('kategori.id', $informasiKategori->id);
                       });
                 })
                 ->latest()
@@ -192,7 +192,7 @@ class GuestController extends Controller
                 ->where(function($q) use ($agendaKategori) {
                     $q->where('kategori_id', $agendaKategori->id)
                       ->orWhereHas('kategoris', function($subq) use ($agendaKategori) {
-                          $subq->where('kategori_id', $agendaKategori->id);
+                          $subq->where('kategori.id', $agendaKategori->id);
                       });
                 })
                 ->latest()
@@ -223,7 +223,7 @@ class GuestController extends Controller
             ->where(function($q) use ($agendaKategori) {
                 $q->where('kategori_id', $agendaKategori->id)
                   ->orWhereHas('kategoris', function($subq) use ($agendaKategori) {
-                      $subq->where('kategori_id', $agendaKategori->id);
+                      $subq->where('kategori.id', $agendaKategori->id);
                   });
             })
             ->where('id', '!=', $post->id)
@@ -250,7 +250,7 @@ class GuestController extends Controller
                 ->where(function($q) use ($informasiKategori) {
                     $q->where('kategori_id', $informasiKategori->id)
                       ->orWhereHas('kategoris', function($subq) use ($informasiKategori) {
-                          $subq->where('kategori_id', $informasiKategori->id);
+                          $subq->where('kategori.id', $informasiKategori->id);
                       });
                 })
                 ->latest()
@@ -281,7 +281,7 @@ class GuestController extends Controller
             ->where(function($q) use ($informasiKategori) {
                 $q->where('kategori_id', $informasiKategori->id)
                   ->orWhereHas('kategoris', function($subq) use ($informasiKategori) {
-                      $subq->where('kategori_id', $informasiKategori->id);
+                      $subq->where('kategori.id', $informasiKategori->id);
                   });
             })
             ->where('id', '!=', $post->id)
