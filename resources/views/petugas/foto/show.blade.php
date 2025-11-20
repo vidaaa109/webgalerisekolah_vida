@@ -39,9 +39,6 @@ use Illuminate\Support\Facades\Storage;
                                 <div class="card-body">
                                     <h6 class="card-title">Informasi Foto</h6>
                                     <hr>
-                                    <p class="mb-2"><strong>Judul:</strong><br>
-                                        {{ $foto->judul }}
-                                    </p>
                                     <p class="mb-2"><strong>Galeri:</strong><br>
                                         {{ $foto->galery->post->judul ?? 'Tidak tersedia' }}
                                     </p>

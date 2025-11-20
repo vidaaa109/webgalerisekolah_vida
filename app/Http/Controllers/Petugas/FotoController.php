@@ -33,24 +33,57 @@ class FotoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi fleksibel: support multiple (files[]), fallback single (file)
+        $rules = [
             'galery_id' => 'required|exists:galery,id',
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ];
+
+        // Jika multiple file
+        if ($request->hasFile('files')) {
+            $rules['files'] = 'required';
+            $rules['files.*'] = 'image|mimes:jpeg,png,jpg,gif|max:2048';
+        } else {
+            // Single file
+            $rules['file'] = 'required|image|mimes:jpeg,png,jpg,gif|max:2048';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Multiple upload path
+        if ($request->hasFile('files')) {
+            $uploaded = 0;
+            foreach ($request->file('files') as $file) {
+                if (!$file->isValid()) {
+                    continue;
+                }
+
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('fotos', $filename, 'public');
+
+                Foto::create([
+                    'galery_id' => $validated['galery_id'],
+                    'file' => $path,
+                ]);
+
+                $uploaded++;
+            }
+
+            return redirect()->route('petugas.foto.index')
+                ->with('success', $uploaded . ' foto berhasil diupload!');
+        }
+
+        // Single upload fallback
+        $file = $request->file('file');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('fotos', $filename, 'public');
+
+        Foto::create([
+            'galery_id' => $validated['galery_id'],
+            'file' => $path,
         ]);
 
-        // Upload file
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/gallery'), $filename);
-
-            Foto::create([
-                'galery_id' => $request->galery_id,
-                'file' => $filename
-            ]);
-        }
-        
-        return redirect()->route('petugas.foto.index')->with('success', 'Foto berhasil diupload!');
+        return redirect()->route('petugas.foto.index')
+            ->with('success', 'Foto berhasil diupload!');
     }
 
     /**

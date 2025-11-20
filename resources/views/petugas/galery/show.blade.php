@@ -69,9 +69,6 @@ use Illuminate\Support\Facades\Storage;
                                                 <i class="fas fa-image fa-2x text-white opacity-50"></i>
                                             </div>
                                         @endif
-                                        <div class="card-body p-2">
-                                            <small class="text-truncate d-block">{{ $foto->judul }}</small>
-                                        </div>
                                     </div>
                                 </div>
                                 @empty

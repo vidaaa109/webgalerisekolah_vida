@@ -37,17 +37,6 @@ use Illuminate\Support\Facades\Storage;
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="judul" class="form-label">Judul Foto</label>
-                                    <input type="text" class="form-control @error('judul') is-invalid @enderror" 
-                                           id="judul" name="judul" value="{{ old('judul', $foto->judul) }}" 
-                                           placeholder="Masukkan judul foto" required>
-                                    @error('judul')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
                         </div>
 
                         <div class="mb-3">
