@@ -19,15 +19,23 @@ class TestimonialController extends Controller
             // Pastikan user login (route sudah dilindungi middleware auth:user)
             $user = Auth::guard('user')->user();
 
-            // Validasi input termasuk reCAPTCHA
-            $validator = Validator::make($request->all(), [
+            // Validasi input
+            $rules = [
                 'pesan' => 'required|string|max:1000',
-                'g-recaptcha-response' => 'required',
-            ], [
+            ];
+            
+            $messages = [
                 'pesan.required' => 'Pesan wajib diisi.',
                 'pesan.max' => 'Pesan maksimal 1000 karakter.',
-                'g-recaptcha-response.required' => 'Verifikasi CAPTCHA wajib diisi.',
-            ]);
+            ];
+            
+            // Add reCAPTCHA validation only if configured
+            if (config('services.recaptcha.site_key')) {
+                $rules['g-recaptcha-response'] = 'required';
+                $messages['g-recaptcha-response.required'] = 'Verifikasi CAPTCHA wajib diisi.';
+            }
+            
+            $validator = Validator::make($request->all(), $rules, $messages);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -37,27 +45,29 @@ class TestimonialController extends Controller
                 ], 422);
             }
 
-            // Verify reCAPTCHA
-            try {
-                $verify = Http::asForm()->post(config('services.recaptcha.verify_url'), [
-                    'secret' => config('services.recaptcha.secret_key'),
-                    'response' => $request->input('g-recaptcha-response'),
-                    'remoteip' => $request->ip(),
-                ])->json();
+            // Verify reCAPTCHA only if configured
+            if (config('services.recaptcha.site_key') && config('services.recaptcha.secret_key')) {
+                try {
+                    $verify = Http::asForm()->post(config('services.recaptcha.verify_url'), [
+                        'secret' => config('services.recaptcha.secret_key'),
+                        'response' => $request->input('g-recaptcha-response'),
+                        'remoteip' => $request->ip(),
+                    ])->json();
 
-                if (!($verify['success'] ?? false)) {
+                    if (!($verify['success'] ?? false)) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Verifikasi CAPTCHA gagal.',
+                            'errors' => ['g-recaptcha-response' => ['Verifikasi CAPTCHA gagal.']]
+                        ], 422);
+                    }
+                } catch (\Exception $e) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Verifikasi CAPTCHA gagal.',
-                        'errors' => ['g-recaptcha-response' => ['Verifikasi CAPTCHA gagal.']]
+                        'message' => 'Tidak dapat memverifikasi CAPTCHA.',
+                        'errors' => ['g-recaptcha-response' => ['Tidak dapat memverifikasi CAPTCHA.']]
                     ], 422);
                 }
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Tidak dapat memverifikasi CAPTCHA.',
-                    'errors' => ['g-recaptcha-response' => ['Tidak dapat memverifikasi CAPTCHA.']]
-                ], 422);
             }
 
             // Create testimonial

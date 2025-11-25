@@ -46,33 +46,6 @@
     }
     .profile-photo-placeholder:hover { transform: scale(1.05); }
     
-    /* Upload button modern */
-    .upload-btn-modern { 
-        margin-top: 1rem; 
-        position: relative; 
-    }
-    .upload-btn-modern label { 
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #3b82f6;
-        color: white;
-        padding: 10px 24px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        border: 2px solid transparent;
-    }
-    .upload-btn-modern label:hover { 
-        background: #2563eb;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-    }
-    .upload-btn-modern input[type=file] { display: none; }
-    
     /* Form card */
     .form-card { 
         background: white; 
@@ -179,31 +152,27 @@
             </a>
         </div>
 
-        <!-- Header with gradient and avatar -->
-        <div class="profile-header">
-            <div class="avatar-section text-center">
-                <div id="photoPreviewContainer">
-                    @if($user->profile_photo_path)
-                        <img id="photoPreview" src="{{ asset('storage/'.$user->profile_photo_path) }}?v={{ time() }}" class="profile-photo-preview" alt="Profile Photo">
-                    @else
-                        <div id="photoPlaceholder" class="profile-photo-placeholder">
-                            {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
-                        </div>
-                    @endif
-                </div>
-                <div class="upload-btn-modern">
-                    <label for="profilePhotoInput">
-                        <i class="bi bi-camera-fill"></i>
-                        <span>Ubah Foto</span>
-                    </label>
-                    <input type="file" name="profile_photo" id="profilePhotoInput" accept="image/jpeg,image/png,image/jpg,image/gif">
-                </div>
-                <div class="text-muted small mt-2">JPG, PNG, JPEG, GIF • Maks. 5MB</div>
-            </div>
-        </div>
+        <form method="POST" action="{{ route('user.profile.update') }}" id="profileForm">
+            @csrf
+            @method('PUT')
 
-        <!-- Form card -->
-        <div class="form-card">
+            <!-- Header with gradient and avatar -->
+            <div class="profile-header">
+                <div class="avatar-section text-center">
+                    <div>
+                        @if($user->profile_photo_path)
+                            <img src="{{ asset('storage/'.$user->profile_photo_path) }}?v={{ time() }}" class="profile-photo-preview" alt="Profile Photo">
+                        @else
+                            <div class="profile-photo-placeholder">
+                                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form card -->
+            <div class="form-card">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
@@ -236,12 +205,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
-
-            <form method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                
-                <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
 
                 <!-- Nama Lengkap -->
                 <div class="mb-3">
@@ -289,53 +252,12 @@
                         <i class="bi bi-check-circle me-1"></i>Simpan Perubahan
                     </button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </section>
 
 <script>
-document.getElementById('profilePhotoInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        // Validasi ukuran file (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('Ukuran file terlalu besar! Maksimal 5MB.');
-            e.target.value = '';
-            return;
-        }
-        
-        // Validasi tipe file
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-        if (!validTypes.includes(file.type)) {
-            alert('Format file tidak valid! Gunakan JPG, PNG, atau GIF.');
-            e.target.value = '';
-            return;
-        }
-
-        // Preview foto
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const container = document.getElementById('photoPreviewContainer');
-            
-            // Hapus placeholder jika ada
-            const placeholder = document.getElementById('photoPlaceholder');
-            if (placeholder) placeholder.remove();
-
-            // Update atau buat img preview
-            let preview = document.getElementById('photoPreview');
-            if (!preview) {
-                preview = document.createElement('img');
-                preview.id = 'photoPreview';
-                preview.className = 'profile-photo-preview';
-                container.appendChild(preview);
-            }
-            preview.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
 // Validasi username - hanya huruf, angka, dan underscore
 document.getElementById('username').addEventListener('input', function(e) {
     this.value = this.value.toLowerCase().replace(/[^a-z0-9_]/g, '');

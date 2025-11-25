@@ -247,6 +247,10 @@ class UserAuthController extends Controller
             return back()->withErrors(['identity' => 'Akun tidak ditemukan.'])->withInput();
         }
 
+        if ($user->status === 'blocked') {
+            return back()->withErrors(['identity' => 'Akun Anda diblokir oleh admin.'])->withInput();
+        }
+
         if (!Hash::check($request->password, $user->password)) {
             return back()->withErrors(['password' => 'Password salah.'])->withInput();
         }

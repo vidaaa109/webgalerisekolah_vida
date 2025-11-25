@@ -4,33 +4,21 @@
 
 @section('content')
 <style>
-    .page-header {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        padding: 4rem 0 3rem;
-        margin-bottom: 3rem;
-        color: white;
-    }
-    
     .info-card {
         transition: all 0.3s ease;
         border: none;
         height: 100%;
+        border-radius: 12px;
+        overflow: hidden;
     }
     
     .info-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(16, 150, 247, 0.2);
     }
 </style>
 
-<div class="page-header">
-    <div class="container">
-        <h1 class="display-4 fw-bold mb-2">Informasi Terkini</h1>
-        <p class="lead mb-0">Berita dan informasi terbaru dari SMKN 4 BOGOR</p>
-    </div>
-</div>
-
-<div class="container mb-5">
+<div class="container mb-5 mt-4">
     <div class="row g-4">
         @forelse($posts as $post)
         <div class="col-md-6 col-lg-4">
@@ -39,7 +27,6 @@
                 <img src="{{ $post->galeries->first()->fotos->first()->url }}" class="card-img-top" alt="{{ $post->judul }}" style="height: 200px; object-fit: cover;">
                 @endif
                 <div class="card-body p-4">
-                    <span class="badge bg-primary mb-3">{{ $post->kategori->judul }}</span>
                     <h5 class="card-title fw-bold mb-3">{{ $post->judul }}</h5>
                     <p class="card-text text-muted">{{ Str::limit(strip_tags($post->isi), 120) }}</p>
                     

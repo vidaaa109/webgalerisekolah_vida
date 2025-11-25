@@ -116,6 +116,9 @@
                                     <td><small>{{ $galery->created_at->format('d M Y') }}</small></td>
                                     <td>
                                         <div class="btn-group" role="group">
+                                            <a href="{{ route('admin.galery.interactions', $galery) }}" class="btn btn-sm btn-secondary" title="Laporan Interaksi">
+                                                <i class="bi bi-graph-up"></i>
+                                            </a>
                                             <a href="{{ route('admin.galery.show', $galery) }}" class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i>
                                             </a>

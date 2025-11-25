@@ -17,6 +17,10 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\GaleryInteractionController;
+use App\Http\Controllers\Admin\CommentModerationController;
+use App\Http\Controllers\Admin\ReportExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,12 +60,13 @@ Route::middleware('throttle:30,1')->group(function () {
 });
 
 // Aksi yang membutuhkan login user
-Route::middleware('auth:user')->group(function () {
+Route::middleware(['auth:user', 'ensure.user.active'])->group(function () {
     Route::post('/galleries/{galery}/like', [LikeController::class, 'toggle'])->name('galleries.like');
     Route::post('/galleries/{galery}/bookmark', [BookmarkController::class, 'toggle'])->name('galleries.bookmark');
     Route::post('/galleries/{galery}/comments', [CommentController::class, 'store'])->name('galleries.comments.store');
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
 });
 
 // Testimonial Routes: submission requires authenticated user
@@ -92,7 +97,7 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::post('/reset-password', [UserAuthController::class, 'resetPassword'])->name('reset-password');
 
     // Profil (butuh login user)
-    Route::middleware('auth:user')->group(function () {
+    Route::middleware(['auth:user', 'ensure.user.active'])->group(function () {
         Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
         Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
@@ -109,6 +114,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Admin Routes (Protected)
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/pdf', [AdminController::class, 'exportDashboardPdf'])->name('dashboard.pdf');
     
     // Posts Management
     Route::resource('posts', PostController::class);
@@ -118,6 +124,8 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     
     // Galeri Management
     Route::resource('galery', GaleryController::class);
+    Route::get('galery/{galery}/interactions', [GaleryInteractionController::class, 'show'])->name('galery.interactions');
+    Route::get('galery/{galery}/interactions/pdf', [GaleryInteractionController::class, 'exportPdf'])->name('galery.interactions.pdf');
     
     // Foto Management
     Route::resource('foto', FotoController::class);
@@ -127,11 +135,26 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     
     // Profile Management
     Route::resource('profile', ProfileController::class);
+
+    // User Management
+    Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::patch('users/{user}/status', [\App\Http\Controllers\Admin\UserController::class, 'updateStatus'])->name('users.updateStatus');
     
     // Testimonial Management
     Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
     Route::put('/testimonials/{id}/status', [TestimonialController::class, 'updateStatus'])->name('testimonials.updateStatus');
     Route::delete('/testimonials/{id}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
+
+    // Reports
+    Route::get('reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::patch('reports/{report}', [\App\Http\Controllers\Admin\ReportController::class, 'update'])->name('reports.update');
+    Route::get('reports/export', [ReportExportController::class, 'index'])->name('reports.export.form');
+    Route::get('reports/export/download', [ReportExportController::class, 'export'])->name('reports.export.download');
+    Route::get('reports/export/pdf', [ReportExportController::class, 'exportPdf'])->name('reports.export.pdf');
+
+    // Comment moderation
+    Route::patch('comments/{comment}/status', [CommentModerationController::class, 'updateStatus'])->name('comments.updateStatus');
+    Route::delete('comments/{comment}', [CommentModerationController::class, 'destroy'])->name('comments.destroy');
 });
 
 // Petugas Routes (Staff Panel)

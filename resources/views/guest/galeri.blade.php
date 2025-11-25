@@ -86,10 +86,10 @@
 
         /* Header chips (tetap) */
         .cats { display:flex; flex-wrap:wrap; gap:12px; padding: 0.5rem 0; }
-        .cat-chip { display:inline-flex; align-items:center; justify-content:center; padding:.6rem 1rem; background:#0f172a; color:#fff; border-radius:10px; text-decoration:none; border:2px solid #0f172a; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-weight:600; font-size:14px; box-shadow: 0 2px 4px rgba(15,23,42,.1); }
-        .cat-chip:hover { background:#1e293b; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(15,23,42,.2); color:#fff; }
-        .cat-chip.is-light { background:#fff; color:#0f172a; border-color:#0f172a; box-shadow: 0 2px 8px rgba(15,23,42,.12); }
-        .cat-chip.is-light:hover { background:#0f172a; color:#fff; border-color:#0f172a; }
+        .cat-chip { display:inline-flex; align-items:center; justify-content:center; padding:.6rem 1rem; background:#001f3f; color:#fff; border-radius:10px; text-decoration:none; border:2px solid #001f3f; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-weight:600; font-size:14px; box-shadow: 0 2px 4px rgba(0,31,63,.1); }
+        .cat-chip:hover { background:#003366; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,31,63,.2); color:#fff; }
+        .cat-chip.is-light { background:#fff; color:#001f3f; border-color:#001f3f; box-shadow: 0 2px 8px rgba(0,31,63,.12); }
+        .cat-chip.is-light:hover { background:#001f3f; color:#fff; border-color:#001f3f; }
     </style>
 
     <section class="py-4">

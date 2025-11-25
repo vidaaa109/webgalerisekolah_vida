@@ -55,9 +55,48 @@
         </div>
     </div>
 
-    <!-- Recent Posts -->
+    <!-- Kategori Summary & Recent Posts -->
     <div class="row g-3 g-md-4">
-        <div class="col-12">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Ringkasan Kategori</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Judul Kategori</th>
+                                    <th class="text-end">Jumlah Posts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($kategoris as $kategori)
+                                <tr>
+                                    <td>{{ $kategori->judul }}</td>
+                                    <td class="text-end">
+                                        <span class="badge bg-primary">
+                                            {{ $kategori->posts_count + ($kategori->posts_many_to_many_count ?? 0) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">Belum ada kategori</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        @if($kategoris->count() === 10)
+                            <small class="text-muted d-block mt-2">Menampilkan 10 kategori terbaru.</small>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Posts Terbaru</h5>
@@ -65,7 +104,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th>Judul</th>

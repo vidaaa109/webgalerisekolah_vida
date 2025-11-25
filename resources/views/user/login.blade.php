@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login User - SMKN 4 BOGOR</title>
+    <title>Login Pengguna - SMKN 4 BOGOR</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -182,7 +182,7 @@
                             </div>
                         @endif
                         
-                        <h5 class="login-title text-center mb-4">Login User</h5>
+                        <h5 class="login-title text-center mb-4">Login Pengguna</h5>
                         
                         <form method="POST" action="{{ route('user.login') }}">
                             @csrf
@@ -211,7 +211,7 @@
                                     <input type="password" class="form-control @error('password') is-invalid @enderror" 
                                            id="password" name="password" placeholder="Masukkan password" required>
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye-slash"></i>
                                     </button>
                                 </div>
                                 @error('password')
@@ -246,7 +246,7 @@
                         <div class="text-center mb-3">
                             <span class="text-muted">Belum punya akun?</span>
                             <a href="{{ route('user.register') }}" class="register-link ms-1">
-                                <i class="fas fa-user-plus me-1"></i>Daftar Sekarang
+                                <i class="fas fa-user-plus me-1"></i>Daftar Pengguna
                             </a>
                         </div>
                         
@@ -269,16 +269,11 @@
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
             const icon = this.querySelector('i');
-            
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+            const isHidden = password.type === 'password';
+
+            password.type = isHidden ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', isHidden);
+            icon.classList.toggle('fa-eye-slash', !isHidden);
         });
     </script>
 </body>

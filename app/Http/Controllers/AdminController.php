@@ -9,6 +9,13 @@ use App\Models\Galery;
 use App\Models\Foto;
 use App\Models\Petugas;
 use App\Models\Profile;
+use App\Models\User;
+use App\Models\Like;
+use App\Models\Comment;
+use App\Models\Bookmark;
+use App\Models\Report;
+use App\Models\Download;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -21,22 +28,59 @@ class AdminController extends Controller
         $totalGaleries = Galery::count();
         $totalFotos = Foto::count();
         $totalPetugas = Petugas::count();
+        $totalKategori = Kategori::count();
+        $totalUsers = User::count();
+        $totalLikes = Like::count();
+        $totalComments = Comment::count();
+        $totalBookmarks = Bookmark::count();
+        $totalReports = Report::count();
+        $totalDownloads = Download::count();
         
         $recentPosts = Post::with(['kategori', 'petugas'])
             ->latest()
             ->take(5)
             ->get();
-            
-        $recentActivities = collect(); // Placeholder for activities
         
         return view('admin.dashboard', compact(
             'totalPosts', 
             'totalGaleries', 
             'totalFotos', 
             'totalPetugas',
-            'recentPosts',
-            'recentActivities'
+            'totalKategori',
+            'totalUsers',
+            'totalLikes',
+            'totalComments',
+            'totalBookmarks',
+            'totalReports',
+            'totalDownloads',
+            'recentPosts'
         ));
+    }
+
+    public function exportDashboardPdf()
+    {
+        $statistics = [
+            'posts' => Post::count(),
+            'galeries' => Galery::count(),
+            'fotos' => Foto::count(),
+            'petugas' => Petugas::count(),
+            'kategori' => Kategori::count(),
+            'users' => User::count(),
+            'likes' => Like::count(),
+            'comments' => Comment::count(),
+            'bookmarks' => Bookmark::count(),
+            'reports' => Report::count(),
+            'downloads' => Download::count(),
+        ];
+
+        $pdf = Pdf::loadView('admin.pdf.dashboard', [
+            'statistics' => $statistics,
+            'generatedAt' => now(),
+        ]);
+
+        $filename = 'laporan_dashboard_' . now()->format('Ymd_His') . '.pdf';
+        
+        return $pdf->download($filename);
     }
 
     /**

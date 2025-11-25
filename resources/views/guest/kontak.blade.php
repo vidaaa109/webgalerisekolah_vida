@@ -3,48 +3,25 @@
 @section('title', 'Kontak - SMKN 4 BOGOR')
 
 @section('content')
-    <!-- Hero Section: Background Image -->
     <style>
-        .hero-banner-contact {
-            position: relative;
-            height: 60vh;
-            min-height: 400px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%), url('/images/dashboarad.JPG') center/cover no-repeat;
-            background-blend-mode: overlay;
+        .contact-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 2rem;
         }
-        .hero-banner-contact .overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 50%, rgba(51, 65, 85, 0.8) 100%);
-            backdrop-filter: blur(1px);
-        }
-        .hero-banner-contact h1 {
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-            font-weight: 800;
-        }
-        .hero-banner-contact p {
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        .contact-subtitle {
+            color: #4b5563;
+            font-size: 1rem;
         }
     </style>
-    <section class="hero-banner-contact">
-        <div class="overlay"></div>
-        <div class="container h-100 position-relative" style="z-index:2;">
-            <div class="row align-items-center h-100">
-                <div class="col-lg-8 text-white">
-                    <h1 class="display-4 fw-bold mb-3">Hubungi Kami</h1>
-                    <p class="lead mb-0 text-white-75">Kami siap membantu dan menjawab pertanyaan Anda</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Contact Section -->
     <section id="kontak" class="py-5 section-fade-in">
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="fw-bold text-primary">Hubungi Kami</h2>
-                    <div class="mx-auto" style="width: 60px; height: 3px; background: linear-gradient(90deg, #1e3a8a, #3b82f6);"></div>
+                    <h2 class="contact-title mb-2">Hubungi Kami</h2>
+                    <p class="contact-subtitle mb-0">Kami siap membantu dan menjawab pertanyaan Anda</p>
                 </div>
             </div>
             
@@ -58,7 +35,7 @@
                         <div class="card-body p-0">
                             <div class="map-container" style="height: 400px; overflow: hidden;">
                                 <iframe 
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.123456789!2d106.1234567!3d-6.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sSMK%20Negeri%204%20Kota%20Bogor!5e0!3m2!1sid!2sid!4v1234567890123!5m2!1sid!2sid" 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.0!2d106.8324!3d-6.640886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c8b16ee07ef5%3A0x14ab253dd267de49!2sSMK%20Negeri%204%20Bogor%20(Nebrazka)!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid" 
                                     width="100%" 
                                     height="100%" 
                                     style="border:0;" 
@@ -87,7 +64,7 @@
                                     </div>
                                     <div class="contact-details">
                                         <h6 class="mb-1 fw-bold">Email</h6>
-                                        <p class="mb-0 text-muted">info@smkn4bogor.sch.id</p>
+                                        <p class="mb-0 text-muted">smkn4@smkn4bogor.sch.id</p>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +78,7 @@
                                     </div>
                                     <div class="contact-details">
                                         <h6 class="mb-1 fw-bold">Alamat</h6>
-                                        <p class="mb-0 text-muted">Jl. Raya Tajur No. 33, Bogor, Jawa Barat, Indonesia</p>
+                                        <p class="mb-0 text-muted">Jl. Raya Tajur, Kp. Buntar RT.02/RW.08, Kel. Muara sari, Kec. Bogor Selatan, RT.03/RW.08, Muarasari, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16137</p>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +92,7 @@
                                     </div>
                                     <div class="contact-details">
                                         <h6 class="mb-1 fw-bold">Telepon</h6>
-                                        <p class="mb-0 text-muted">(0251) 123456</p>
+                                        <p class="mb-0 text-muted">02517547381</p>
                                     </div>
                                 </div>
                             </div>
@@ -161,11 +138,13 @@
                                         <div class="form-text">Maksimal 1000 karakter</div>
                                     </div>
                                     
-                                    <!-- reCAPTCHA -->
+                                    <!-- reCAPTCHA (Optional) -->
+                                    @if(config('services.recaptcha.site_key'))
                                     <div class="mb-4 d-flex justify-content-center">
                                         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
                                         <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                                     </div>
+                                    @endif
 
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">

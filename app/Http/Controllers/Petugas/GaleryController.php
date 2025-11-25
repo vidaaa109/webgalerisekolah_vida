@@ -7,6 +7,8 @@ use App\Models\Galery;
 use App\Models\Post;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Models\Foto;
+use Illuminate\Support\Facades\Storage;
 
 class GaleryController extends Controller
 {
@@ -35,15 +37,44 @@ class GaleryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
             'post_id' => 'required|exists:posts,id',
             'position' => 'required|integer|min:1',
-            'status' => 'required|in:0,1'
+            'status' => 'required|in:0,1',
+            'files' => 'nullable',
+            'files.*' => 'image|mimes:jpeg,png,jpg,gif'
         ]);
 
-        Galery::create($request->all());
+        $galery = Galery::create([
+            'judul' => $validated['judul'],
+            'post_id' => $validated['post_id'],
+            'position' => $validated['position'],
+            'status' => $validated['status'],
+        ]);
+
+        // Simpan foto-foto jika ada
+        $uploaded = 0;
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                if (!$file->isValid()) {
+                    continue;
+                }
+
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('fotos', $filename, 'public');
+
+                Foto::create([
+                    'galery_id' => $galery->id,
+                    'file' => $path,
+                ]);
+
+                $uploaded++;
+            }
+        }
         
-        return redirect()->route('petugas.galery.index')->with('success', 'Galeri berhasil dibuat!');
+        return redirect()->route('petugas.galery.index')
+            ->with('success', 'Galeri berhasil dibuat' . ($uploaded ? " dan {$uploaded} foto diupload!" : '!'));
     }
 
     /**

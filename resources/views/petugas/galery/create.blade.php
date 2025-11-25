@@ -11,8 +11,19 @@
                     <h5 class="card-title mb-0">Form Tambah Galeri</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('petugas.galery.store') }}" method="POST">
+                    <form action="{{ route('petugas.galery.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <div class="mb-3">
+                            <label for="judul" class="form-label">Judul Galeri <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('judul') is-invalid @enderror" 
+                                   id="judul" name="judul" value="{{ old('judul') }}" 
+                                   placeholder="Masukkan judul galeri" required>
+                            @error('judul')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Judul galeri akan ditampilkan di bawah foto pada halaman galeri</small>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -77,6 +88,24 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Foto-foto (opsional)</label>
+                            <div id="g-dropzone" class="border border-2 border-dashed rounded p-4 text-center" style="border-style:dashed; cursor:pointer;">
+                                <i class="fa-regular fa-images fa-2x mb-2"></i>
+                                <div class="mb-1">Tarik & letakkan gambar di sini atau klik untuk memilih</div>
+                                <small class="text-muted">Bisa pilih banyak sekaligus. Format: JPEG, PNG, JPG, GIF.</small>
+                                <input type="file" id="g-files" name="files[]" accept="image/*" multiple class="d-none">
+                            </div>
+                            @error('files')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            @error('files.*')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div id="g-previewGrid" class="row g-3 mb-3"></div>
+
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('petugas.galery.index') }}" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -96,6 +125,9 @@ document.addEventListener('DOMContentLoaded', function(){
   const positionType = document.getElementById('position_type');
   const positionInput = document.getElementById('position');
   const maxPosition = {{ $maxPosition + 1 }};
+  const dropzone = document.getElementById('g-dropzone');
+  const filesInput = document.getElementById('g-files');
+  const previewGrid = document.getElementById('g-previewGrid');
 
   // Category filter for posts
   kategoriFilter.addEventListener('change', function() {
@@ -143,6 +175,65 @@ document.addEventListener('DOMContentLoaded', function(){
     positionInput.readOnly = true;
     positionInput.classList.add('bg-light');
   }
+
+  // Dropzone handlers
+  function humanSize(bytes){
+      const units=['B','KB','MB','GB'];
+      let i=0; let s=bytes;
+      while(s>1024 && i<units.length-1){ s/=1024; i++; }
+      return s.toFixed(1)+' '+units[i];
+  }
+
+  function renderPreview(files){
+      previewGrid.innerHTML='';
+      Array.from(files).forEach((file)=>{
+          const col = document.createElement('div');
+          col.className = 'col-md-4';
+          col.innerHTML = `
+              <div class="card h-100">
+                  <div class="ratio ratio-4x3 bg-light">
+                      <img class="w-100 h-100 object-fit-cover" src="" alt="preview" />
+                  </div>
+                  <div class="card-body p-2">
+                      <div class="small text-truncate" title="${file.name}">${file.name}</div>
+                      <div class="text-muted small">${humanSize(file.size)}</div>
+                  </div>
+              </div>`;
+          const img = col.querySelector('img');
+          const reader = new FileReader();
+          reader.onload = e => img.src = e.target.result;
+          reader.readAsDataURL(file);
+          previewGrid.appendChild(col);
+      });
+  }
+
+  dropzone.addEventListener('click', () => filesInput.click());
+
+  dropzone.addEventListener('dragover', function(e){
+      e.preventDefault();
+      dropzone.classList.add('bg-light');
+  });
+
+  dropzone.addEventListener('dragleave', function(){
+      dropzone.classList.remove('bg-light');
+  });
+
+  dropzone.addEventListener('drop', function(e){
+      e.preventDefault();
+      dropzone.classList.remove('bg-light');
+      if(e.dataTransfer.files && e.dataTransfer.files.length){
+          filesInput.files = e.dataTransfer.files;
+          renderPreview(e.dataTransfer.files);
+      }
+  });
+
+  filesInput.addEventListener('change', function(e){
+      if(e.target.files && e.target.files.length){
+          renderPreview(e.target.files);
+      } else {
+          previewGrid.innerHTML='';
+      }
+  });
 });
 </script>
 @endpush

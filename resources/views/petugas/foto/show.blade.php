@@ -3,6 +3,10 @@
 @section('title', 'Detail Foto - Petugas SMKN 4 BOGOR')
 @section('page-title', 'Detail Foto')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -16,8 +20,14 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            @if($foto->file && file_exists(public_path('images/gallery/' . $foto->file)))
-                                <img src="{{ asset('images/gallery/' . $foto->file) }}" class="img-fluid rounded" alt="{{ $foto->judul }}">
+                            @if($foto->file)
+                                @php
+                                    // Check if file is stored using Storage (path contains 'fotos/') or public path
+                                    $imageUrl = str_contains($foto->file, 'fotos/') 
+                                        ? Storage::url($foto->file) 
+                                        : asset('images/gallery/' . $foto->file);
+                                @endphp
+                                <img src="{{ $imageUrl }}" class="img-fluid rounded" alt="{{ $foto->judul ?? 'Foto' }}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'bg-secondary d-flex align-items-center justify-content-center rounded\' style=\'height: 400px;\'><i class=\'fas fa-image fa-5x text-white opacity-50\'></i></div>';">
                             @else
                                 <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 400px;">
                                     <i class="fas fa-image fa-5x text-white opacity-50"></i>
@@ -29,9 +39,6 @@
                                 <div class="card-body">
                                     <h6 class="card-title">Informasi Foto</h6>
                                     <hr>
-                                    <p class="mb-2"><strong>Judul:</strong><br>
-                                        {{ $foto->judul }}
-                                    </p>
                                     <p class="mb-2"><strong>Galeri:</strong><br>
                                         {{ $foto->galery->post->judul ?? 'Tidak tersedia' }}
                                     </p>

@@ -188,7 +188,7 @@
                                     <input type="password" class="form-control @error('password') is-invalid @enderror" 
                                            id="password" name="password" placeholder="Masukkan password" required>
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye-slash"></i>
                                     </button>
                                 </div>
                                 @error('password')
@@ -231,16 +231,11 @@
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
             const icon = this.querySelector('i');
-            
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+            const isHidden = password.type === 'password';
+
+            password.type = isHidden ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', isHidden);
+            icon.classList.toggle('fa-eye-slash', !isHidden);
         });
     </script>
 </body>

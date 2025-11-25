@@ -10,7 +10,10 @@ class KategoriController extends Controller
 {
     public function index()
     {
-        $kategoris = Kategori::withCount('posts')->latest()->paginate(10);
+        $kategoris = Kategori::withCount([
+                'posts',
+                'postsManyToMany as posts_many_to_many_count',
+            ])->latest()->paginate(10);
         return view('admin.kategori.index', compact('kategoris'));
     }
 

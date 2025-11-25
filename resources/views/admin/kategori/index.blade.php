@@ -45,7 +45,9 @@
                                     <td>{{ $kategoris->firstItem() + $index }}</td>
                                     <td>{{ $kategori->judul }}</td>
                                     <td>
-                                        <span class="badge bg-primary">{{ $kategori->posts_count }}</span>
+                                        <span class="badge bg-primary">
+                                            {{ $kategori->posts_count + ($kategori->posts_many_to_many_count ?? 0) }}
+                                        </span>
                                     </td>
                                     <td>{{ $kategori->created_at->format('d M Y') }}</td>
                                     <td>

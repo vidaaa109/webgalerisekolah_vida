@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Report;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +28,9 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'profile_photo_path',
+        'status',
+        'blocked_reason',
+        'blocked_at',
     ];
 
     /**
@@ -51,6 +55,17 @@ class User extends Authenticatable
             'password' => 'hashed',
             'otp_expires_at' => 'datetime',
             'is_verified' => 'boolean',
+            'blocked_at' => 'datetime',
         ];
+    }
+
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    public function submittedReports()
+    {
+        return $this->hasMany(Report::class, 'reporter_id');
     }
 }

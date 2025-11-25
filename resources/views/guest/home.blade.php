@@ -9,7 +9,7 @@
         position: relative;
         height: 100vh;
         overflow: hidden;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        background: transparent;
     }
     
     .slideshow-container {
@@ -25,11 +25,15 @@
         width: 100%;
         height: 100%;
         opacity: 0;
-        transition: opacity 1.5s ease-in-out;
+        visibility: hidden;
+        transition: opacity 1s ease-in-out;
+        z-index: 1;
     }
     
     .slide.active {
         opacity: 1;
+        visibility: visible;
+        z-index: 1;
     }
     
     .slide-bg {
@@ -46,9 +50,47 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 50%, rgba(15, 23, 42, 0.9) 100%);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.4) 100%);
         z-index: 2;
         backdrop-filter: blur(1px);
+    }
+    
+    .hero-cta-buttons {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .hero-cta-btn {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.85rem 2.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        border-width: 0;
+        letter-spacing: 0.02em;
+    }
+    
+    .hero-cta-btn-primary {
+        background-color: var(--primary-color);
+        color: #ffffff;
+    }
+    
+    .hero-cta-btn-primary:hover {
+        background-color: #1e40af;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-cta-btn-outline {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.85);
+        color: #ffffff;
+    }
+    
+    .hero-cta-btn-outline:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
     }
     
     .slide-indicators {
@@ -104,19 +146,9 @@
     <!-- Hero Section with Slideshow -->
     <section id="beranda" class="hero-slideshow">
         <div class="slideshow-container">
-            <!-- Slide 1 -->
+            <!-- Single Static Image -->
             <div class="slide active">
                 <div class="slide-bg" style="background-image: url('/images/dashboarad.JPG');"></div>
-            </div>
-            
-            <!-- Slide 2 -->
-            <div class="slide">
-                <div class="slide-bg" style="background-image: url('/images/dashbord2.jpg');"></div>
-            </div>
-            
-            <!-- Slide 3 -->
-            <div class="slide">
-                <div class="slide-bg" style="background-image: url('/images/dashbord3.jpg');"></div>
             </div>
         </div>
         
@@ -125,20 +157,16 @@
             <div class="container">
                 <div class="row align-items-center min-vh-100">
                     <div class="col-lg-6 animate-fadeInUp">
-                        <h1 class="display-3 fw-bold mb-4 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation-delay: 0.2s;">Selamat Datang di Web Galeri Sekolah</h1>
-                        <p class="lead mb-4 text-white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-size: 1.25rem; animation-delay: 0.4s;">
-                            @if($profile)
-                                {{ Str::limit(strip_tags($profile->isi), 200) }}
-                            @else
-                                Membangun Generasi Unggul, Berkarakter, dan Berwawasan Lingkungan
-                            @endif
+                        <h1 class="display-3 fw-bold mb-4 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation-delay: 0.2s;">Selamat Datang di SMKN 4 BOGOR</h1>
+                        <p class="lead mb-4 text-white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-size: 1.1rem; animation-delay: 0.4s;">
+                        SMKN 4 Bogor, sekolah kejuruan yang fokus membentuk siswa berkompeten, terampil, dan siap bersaing di dunia industri.   
                         </p>
-                        <div class="d-flex gap-3 animate-slideInLeft" style="animation-delay: 0.6s;">
-                            <a href="{{ route('guest.profil') }}" class="btn btn-primary btn-lg px-4 py-3" style="border-radius: 8px; font-weight: 600;">
-                                <i class="fas fa-school me-2"></i>Lihat Profil Sekolah
+                        <div class="d-flex hero-cta-buttons animate-slideInLeft" style="animation-delay: 0.6s;">
+                            <a href="{{ route('guest.profil') }}" class="btn btn-lg hero-cta-btn hero-cta-btn-primary">
+                                Lihat Profil Sekolah
                             </a>
-                            <a href="{{ route('guest.galeri') }}" class="btn btn-outline-light btn-lg px-4 py-3" style="border-radius: 8px; font-weight: 600; border-width: 2px;">
-                                <i class="fas fa-images me-2"></i>Lihat Galeri
+                            <a href="{{ route('guest.galeri') }}" class="btn btn-lg hero-cta-btn hero-cta-btn-outline">
+                                Lihat Galeri
                             </a>
                         </div>
                     </div>
@@ -146,12 +174,6 @@
             </div>
         </div>
         
-        <!-- Slide Indicators -->
-        <div class="slide-indicators">
-            <span class="indicator active" data-slide="0"></span>
-            <span class="indicator" data-slide="1"></span>
-            <span class="indicator" data-slide="2"></span>
-        </div>
     </section>
 
     <!-- Profil Section inside Home -->
@@ -162,9 +184,9 @@
                     @if($profile)
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body p-4">
-                                <h2 class="card-title text-primary mb-4">{{ $profile->judul }}</h2>
+                                <h2 class="card-title text-primary mb-4">{{ str_replace('Sekolah Kita', 'SMKN 4 Bogor', $profile->judul) }}</h2>
                                 <div class="profile-content">
-                                    {!! nl2br(e($profile->isi)) !!}
+                                    {!! nl2br(e(str_replace('Sekolah Kita', 'SMKN 4 Bogor', $profile->isi))) !!}
                                 </div>
                             </div>
                         </div>
@@ -225,7 +247,7 @@
                                 <i class="fas fa-map-marker-alt text-primary me-3"></i>
                                 <div>
                                     <h6 class="mb-1">Alamat</h6>
-                                    <p class="mb-0 small text-muted">Jl. Raya Tajur No. 33, Bogor</p>
+                                    <p class="mb-0 small text-muted">Jl. Raya Tajur, Kp. Buntar RT.02/RW.08, Kel. Muara sari, Kec. Bogor Selatan, RT.03/RW.08, Muarasari, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16137</p>
                                 </div>
                             </div>
                             
@@ -233,7 +255,7 @@
                                 <i class="fas fa-phone text-primary me-3"></i>
                                 <div>
                                     <h6 class="mb-1">Telepon</h6>
-                                    <p class="mb-0 small text-muted">(0251) 123456</p>
+                                    <p class="mb-0 small text-muted">02517547381</p>
                                 </div>
                             </div>
                             
@@ -241,7 +263,7 @@
                                 <i class="fas fa-envelope text-primary me-3"></i>
                                 <div>
                                     <h6 class="mb-1">Email</h6>
-                                    <p class="mb-0 small text-muted">info@smkn4bogor.sch.id</p>
+                                    <p class="mb-0 small text-muted">smkn4@smkn4bogor.sch.id</p>
                                 </div>
                             </div>
                             
@@ -249,7 +271,7 @@
                                 <i class="fas fa-globe text-primary me-3"></i>
                                 <div>
                                     <h6 class="mb-1">Website</h6>
-                                    <p class="mb-0 small text-muted">www.smkn4bogor.sch.id</p>
+                                    <p class="mb-0 small text-muted">http://smkn4bogor.sch.id</p>
                                 </div>
                             </div>
                         </div>
@@ -436,7 +458,7 @@
                 <div class="col-12">
                     <h2 class="fw-bold text-primary">Testimoni</h2>
                     <p class="lead text-muted">Apa kata mereka tentang SMKN 4 BOGOR</p>
-                    <div class="mx-auto" style="width: 60px; height: 3px; background: linear-gradient(90deg, #1e3a8a, #3b82f6);"></div>
+                    <div class="mx-auto" style="width: 60px; height: 3px; background: linear-gradient(90deg, #0b244d, var(--primary-color));"></div>
                 </div>
             </div>
             
@@ -471,31 +493,7 @@
             const indicators = document.querySelectorAll('.indicator');
             let currentSlide = 0;
             
-            function showSlide(index) {
-                // Remove active class from all slides and indicators
-                slides.forEach(slide => slide.classList.remove('active'));
-                indicators.forEach(indicator => indicator.classList.remove('active'));
-                
-                // Add active class to current slide and indicator
-                slides[index].classList.add('active');
-                indicators[index].classList.add('active');
-            }
-            
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                showSlide(currentSlide);
-            }
-            
-            // Auto-slide every 5 seconds
-            setInterval(nextSlide, 5000);
-            
-            // Manual slide control via indicators
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    currentSlide = index;
-                    showSlide(currentSlide);
-                });
-            });
+            // Slideshow disabled - using single static image
             
             // Load Testimonials
             loadTestimonials();
@@ -577,7 +575,13 @@
                         const container = document.getElementById('testimonialsContainer');
                         
                         if (data.success && data.data.length > 0) {
-                            container.innerHTML = data.data.map(testimonial => `
+                            container.innerHTML = data.data.map(testimonial => {
+                                const formattedDate = new Date(testimonial.created_at).toLocaleDateString('id-ID', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                });
+                                return `
                                 <div class="col-md-4">
                                     <div class="card h-100 border-0 shadow-sm">
                                         <div class="card-body p-4">
@@ -587,7 +591,7 @@
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-1 fw-bold">${testimonial.nama}</h6>
-                                                    <small class="text-muted">${testimonial.created_at}</small>
+                                                    <small class="text-muted">${formattedDate}</small>
                                                 </div>
                                             </div>
                                             <p class="card-text text-muted">"${testimonial.pesan}"</p>
@@ -601,7 +605,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            `).join('');
+                            `;
+                            }).join('');
                         } else {
                             container.innerHTML = `
                                 <div class="col-12 text-center">

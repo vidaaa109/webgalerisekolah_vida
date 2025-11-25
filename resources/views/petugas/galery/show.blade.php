@@ -3,6 +3,10 @@
 @section('title', 'Detail Galeri - Petugas SMKN 4 BOGOR')
 @section('page-title', 'Detail Galeri')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -52,16 +56,19 @@
                                 @forelse($galery->fotos as $foto)
                                 <div class="col-sm-6 col-md-4">
                                     <div class="card">
-                                        @if($foto->file && file_exists(public_path('images/gallery/' . $foto->file)))
-                                            <img src="{{ asset('images/gallery/' . $foto->file) }}" class="card-img-top" alt="{{ $foto->judul }}" style="height: 150px; object-fit: cover;">
+                                        @if($foto->file)
+                                            @php
+                                                // Check if file is stored using Storage (path contains 'fotos/') or public path
+                                                $imageUrl = str_contains($foto->file, 'fotos/') 
+                                                    ? Storage::url($foto->file) 
+                                                    : asset('images/gallery/' . $foto->file);
+                                            @endphp
+                                            <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $foto->judul ?? 'Foto' }}" style="height: 150px; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'bg-secondary d-flex align-items-center justify-content-center\' style=\'height: 150px;\'><i class=\'fas fa-image fa-2x text-white opacity-50\'></i></div>';">
                                         @else
                                             <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 150px;">
                                                 <i class="fas fa-image fa-2x text-white opacity-50"></i>
                                             </div>
                                         @endif
-                                        <div class="card-body p-2">
-                                            <small class="text-truncate d-block">{{ $foto->judul }}</small>
-                                        </div>
                                     </div>
                                 </div>
                                 @empty

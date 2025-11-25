@@ -36,17 +36,23 @@ class PostController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori,id',
+            'kategori_ids' => 'nullable|array',
+            'kategori_ids.*' => 'exists:kategori,id',
             'isi' => 'required|string',
             'status' => 'required|in:draft,published,archived'
         ]);
 
-        Post::create([
+        $post = Post::create([
             'judul' => $request->judul,
             'kategori_id' => $request->kategori_id,
             'isi' => $request->isi,
             'petugas_id' => Auth::guard('petugas')->id(),
             'status' => $request->status
         ]);
+        
+        if ($request->has('kategori_ids') && is_array($request->kategori_ids)) {
+            $post->kategoris()->sync($request->kategori_ids);
+        }
         
         return redirect()->route('petugas.posts.index')->with('success', 'Post berhasil dibuat!');
     }
@@ -76,11 +82,22 @@ class PostController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori,id',
+            'kategori_ids' => 'nullable|array',
+            'kategori_ids.*' => 'exists:kategori,id',
             'isi' => 'required|string',
             'status' => 'required|in:draft,published,archived'
         ]);
+        
+        $post->update([
+            'judul' => $request->judul,
+            'kategori_id' => $request->kategori_id,
+            'isi' => $request->isi,
+            'status' => $request->status
+        ]);
 
-        $post->update($request->all());
+        if ($request->has('kategori_ids')) {
+            $post->kategoris()->sync($request->kategori_ids ?? []);
+        }
         
         return redirect()->route('petugas.posts.index')->with('success', 'Post berhasil diupdate!');
     }

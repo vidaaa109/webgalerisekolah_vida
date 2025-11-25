@@ -184,6 +184,27 @@
                     <span>TESTIMONI</span>
                 </a>
             </div>
+
+            <div class="nav-item">
+                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>PENGGUNA</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="{{ route('admin.reports.index') }}" class="nav-link {{ request()->routeIs('admin.reports.index') ? 'active' : '' }}">
+                    <i class="fas fa-flag"></i>
+                    <span>LAPORAN</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="{{ route('admin.reports.export.form') }}" class="nav-link {{ request()->routeIs('admin.reports.export.*') ? 'active' : '' }}">
+                    <i class="fas fa-table"></i>
+                    <span>EXPORT TABEL</span>
+                </a>
+            </div>
             
             <hr class="mx-3">
             

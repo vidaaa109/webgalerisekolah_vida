@@ -25,6 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Trust proxies for HTTPS (Railway handles HTTPS at proxy level)
         $middleware->trustProxies();
+
+        $middleware->alias([
+            'ensure.user.active' => \App\Http\Middleware\EnsureUserActive::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

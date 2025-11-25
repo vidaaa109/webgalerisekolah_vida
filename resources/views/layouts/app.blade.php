@@ -527,46 +527,10 @@
             scroll-behavior: smooth;
         }
         
-        /* Ensure content is visible */
+        /* Ensure main content is visible (no aggressive overrides) */
         main {
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: block !important;
-        }
-        
-        section {
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: block !important;
-        }
-        
-        .container {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        .row {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        .card {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        
-        /* Force visibility for all content */
-        * {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        /* Override any hidden elements */
-        .hidden, .d-none, [style*="display: none"], [style*="opacity: 0"] {
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: block !important;
+            opacity: 1;
+            visibility: visible;
         }
         
         /* Button animations - Minimal */
@@ -994,108 +958,62 @@
         });
     </script>
 
-    <!-- Footer -->
-    <footer class="footer mt-3">
+    <!-- Footer Minimalis -->
+    <footer class="bg-dark text-white py-5">
         <div class="container">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <h5>SMK Negeri 4 Kota Bogor</h5>
-                    <p>Jl. Raya Tajur No. 33, Bogor<br>
-                    Jawa Barat, Indonesia</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <h5>Kontak</h5>
-                    <p>Email: info@smkn4bogor.sch.id<br>
-                    Telp: (0251) 123456</p>
-                </div>
-            </div>
-
-            <!-- Peta Lokasi & Informasi Kontak di Footer -->
-            <div class="row g-3 align-items-stretch">
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-lg h-100" style="border-radius: 20px; overflow: hidden;">
-                        <div class="card-header text-white" style="background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%); border-radius: 20px 20px 0 0;">
-                            <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Denah Lokasi</h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="map-container" style="overflow: hidden; border-radius: 0 0 20px 20px;">
-                                <iframe 
-                                    src="https://www.google.com/maps?q=Jl.+Raya+Tajur,+Kp.+Buntar+RT.02/RW.08,+Kel.+Muara+sari,+Kec.+Bogor+Selatan,+RT.03/RW.08,+Muarasari,+Kec.+Bogor+Sel.,+Kota+Bogor,+Jawa+Barat+16137&output=embed" 
-                                    width="100%" 
-                                    height="100%" 
-                                    style="border:0;" 
-                                    allowfullscreen="" 
-                                    loading="lazy" 
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div>
-                        </div>
+            <div class="row">
+                <!-- Kolom Kiri: Logo & Alamat -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="/images/logo-smkn4.png.png" alt="Logo SMKN 4 BOGOR" style="height: 50px; margin-right: 15px;">
+                        <h5 class="mb-0">SMKN 4 BOGOR</h5>
                     </div>
+                    <p class="mb-2 small">
+                        <i class="fas fa-map-marker-alt me-2"></i> 
+                        Jl. Raya Tajur, Kp. Buntar RT.02/RW.08, Kel. Muara sari, Kec. Bogor Selatan, Kota Bogor, Jawa Barat 16137
+                    </p>
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-lg h-100" style="border-radius: 20px; overflow: hidden;">
-                        <div class="card-header text-white" style="background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%); border-radius: 20px 20px 0 0;">
-                            <h5 class="mb-0"><i class="fas fa-phone me-2"></i>Informasi Kontak</h5>
-                        </div>
-                        <div class="card-body p-4" style="border-radius: 0 0 20px 20px;">
-                            <div class="contact-info-item mb-3">
-                                <div class="d-flex align-items-start">
-                                    <div class="me-3">
-                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                            <i class="fas fa-envelope text-primary"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 text-white">Email</h6>
-                                        <p class="mb-0" style="color: #cbd5e1;">info@smkn4bogor.sch.id</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="contact-info-item mb-3">
-                                <div class="d-flex align-items-start">
-                                    <div class="me-3">
-                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                            <i class="fas fa-phone text-primary"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 text-white">Telepon</h6>
-                                        <p class="mb-0" style="color: #cbd5e1;">(0251) 123456</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="contact-info-item mb-4">
-                                <div class="d-flex align-items-start">
-                                    <div class="me-3">
-                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                            <i class="fas fa-fax text-primary"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 text-white">Fax</h6>
-                                        <p class="mb-0" style="color: #cbd5e1;">(0251) 123457</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <hr style="border-color: rgba(255,255,255,0.1);">
-                            
-                            <div class="text-center mt-3">
-                                <p class="text-white-50 mb-3 small">Ingin mengirim testimoni atau pesan?</p>
-                                <a href="{{ route('guest.kontak') }}" class="btn btn-primary btn-lg w-100">
-                                    <i class="fas fa-paper-plane me-2"></i>Hubungi Kami
-                                </a>
-                            </div>
-                        </div>
+                <!-- Kolom Tengah: Kontak -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h6 class="mb-3">Kontak Kami</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="fas fa-phone me-2"></i> 0251-7547381
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-envelope me-2"></i> smkn4@smkn4bogor.sch.id
+                        </li>
+                        <li>
+                            <i class="fas fa-clock me-2"></i> Senin-Jumat: 07.00-16.00 WIB
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom Kanan: Sosial Media -->
+                <div class="col-md-4">
+                    <h6 class="mb-3">Ikuti Kami</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="https://www.facebook.com/share/17CtNSgSXu/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/smkn4kotabogor?igsh=MXUzeG13b2szbDlpMA==" class="text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@smknegeri4bogor905?si=FecUBrkfaNSZzX30" class="text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    
+                    <!-- Tombol Hubungi Kami -->
+                    <div class="mt-4">
+                        <a href="{{ route('guest.kontak') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Hubungi Kami
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <hr class="my-3">
-            <div class="text-center">
-                <p>&copy; {{ date('Y') }} SMKN 4 BOGOR. All rights reserved.</p>
+            <!-- Garis Pemisah -->
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+
+            <!-- Copyright -->
+            <div class="text-center small">
+                <p class="mb-0">&copy; {{ date('Y') }} SMKN 4 BOGOR. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
@@ -1156,33 +1074,6 @@
     
     @stack('scripts')
     
-    <!-- Force content visibility script -->
-    <script>
-        // Jalankan setelah halaman selesai dimuat
-        window.addEventListener('load', function() {
-            // JANGAN memaksa semua elemen tampil. Batasi agar tidak menyentuh modal/backdrop/offcanvas/dropdown.
-            const unsafeSelectors = ['.modal', '.modal-backdrop', '.offcanvas', '.dropdown-menu'];
-            // Contoh perapian ringan untuk konten utama saja
-            const main = document.querySelector('main');
-            if (main) {
-                main.style.opacity = '1';
-                main.style.visibility = 'visible';
-            }
-            
-            console.log('Konten utama ditampilkan tanpa mengganggu komponen Bootstrap');
-        });
-        
-        // Jalankan segera (aman), tanpa menyentuh komponen interaktif Bootstrap
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                const main = document.querySelector('main');
-                if (main) {
-                    main.style.opacity = '1';
-                    main.style.visibility = 'visible';
-                }
-            }, 0);
-        });
-    </script>
     
 </body>
 </html>
